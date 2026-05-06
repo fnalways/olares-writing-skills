@@ -1,0 +1,13 @@
+{
+  "name": "olares-writing-skills",
+  "description": "Writing skills for Olares contributors: documentation, use cases, and UX copy",
+  "version": "0.1.0",
+  "author": {
+    "name": "Yajing Wang",
+    "url": "https://github.com/fnalways"
+  },
+  "homepage": "https://github.com/fnalways/olares-writing-skills",
+  "repository": "https://github.com/fnalways/olares-writing-skills",
+  "license": "MIT",
+  "skills": "./skills"
+}

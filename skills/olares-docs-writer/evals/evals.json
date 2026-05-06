@@ -1,0 +1,33 @@
+{
+  "skill_name": "olares-docs-writer",
+  "evals": [
+    {
+      "id": 1,
+      "name": "english-use-case-tutorial",
+      "prompt": "Write a use case tutorial for a new Olares app called 'Home Assistant' that helps users control smart home devices. The tutorial should cover: installation from Market, initial setup, adding a smart device (like a light bulb), and creating an automation. Write it in English following Olares documentation style.",
+      "expected_output": "A complete use case markdown file with proper frontmatter, learning objectives, prerequisites, step-by-step instructions with numbered lists, tips, and FAQ section. Should follow the Olares style with outline, description, bordered images placeholders, and material icons.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "chinese-use-case-tutorial",
+      "prompt": "写一篇关于在 Olares 上部署 'Plex' 媒体服务器的使用案例教程。内容包括：从应用市场安装、配置媒体库、添加电影文件夹、以及如何在其他设备上观看。使用中文撰写，遵循 Olares 文档风格。",
+      "expected_output": "一份完整的中文 use case markdown 文件，包含正确的 frontmatter、学习目标、前置条件、步骤说明（使用有序列表）、提示框，以及常见问题部分。应该遵循 Olares 中文文档的简洁风格。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "translate-english-to-chinese",
+      "prompt": "Translate the following English Olares documentation to Chinese. Adapt the style to be more concise as typical for Chinese Olares docs:\n\n---\noutline: [2, 3]\ndescription: Learn how to configure Nextcloud on Olares for secure file storage and collaboration.\n---\n\n# Set up your personal cloud storage with Nextcloud\n\nNextcloud is a self-hosted file storage solution that puts you in control of your data. This guide walks you through installing and configuring Nextcloud on your Olares device.\n\n## Learning objectives\n\nBy the end of this tutorial, you will learn how to:\n- Install Nextcloud from the Olares Market.\n- Configure your admin account.\n- Upload and organize files.\n- Share files with other users.\n\n## Prerequisites\n\nBefore you begin, make sure:\n- Olares is running with at least 4GB of free storage space.\n- You have administrator access to your Olares instance.",
+      "expected_output": "A properly translated Chinese version that maintains the structure but adapts the writing style to be more concise and direct, typical of Olares Chinese documentation. Should keep the same sections but with culturally appropriate Chinese expressions.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "index-page-with-filterable-list",
+      "prompt": "Create an index page for a new 'Developer Tools' section in Olares documentation. Include a FilterableList component with items like: VS Code Server (tags: ['Development']), Jupyter Notebook (tags: ['AI', 'Development']), GitLab (tags: ['DevOps']), and n8n (tags: ['Automation']). Write it in English.",
+      "expected_output": "A markdown file with proper frontmatter, a descriptive introduction paragraph, and a FilterableList component with the specified items and tags. Should follow the Olares index page pattern.",
+      "files": []
+    }
+  ]
+}

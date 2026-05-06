@@ -1,0 +1,23 @@
+{
+  "skill_name": "use-case-writer",
+  "evals": [
+    {
+      "id": 1,
+      "name": "n8n-workflow-automation",
+      "prompt": "帮我写一篇关于在 Olares 上使用 n8n 工作流自动化的英文 use case。n8n 是一个开源的工作流自动化工具，可以连接各种服务和应用。主要内容包括：1) 介绍 n8n 是什么；2) 前置条件是需要先安装好 Ollama；3) 从 Market 安装 n8n 的步骤；4) 如何配置 webhook 来接收外部事件；5) 创建一个简单的工作流示例。请输出完整的 Markdown 文件，放在 docs/use-cases/n8n.md",
+      "expected_output": "A complete English use case document for n8n following Olares documentation style, with proper frontmatter, installation steps, webhook configuration, and workflow examples"
+    },
+    {
+      "id": 2,
+      "name": "comfyui-basic-rewrite",
+      "prompt": "将以下中文内容改写成适合 Olares 文档站的英文 use case：ComfyUI 是一个基于节点的 Stable Diffusion 图形化界面。用户可以通过拖拽节点来构建图像生成工作流。在 Olares 上使用 ComfyUI，你可以：1) 从 Market 安装 ComfyUI；2) 导入现有的工作流；3) 生成 AI 图像。需要的前置条件是已经安装并运行 Ollama，且安装了至少一个图像生成模型。",
+      "expected_output": "An English use case document for ComfyUI with proper structure, frontmatter, prerequisites section mentioning Ollama, and clear installation/configuration steps"
+    },
+    {
+      "id": 3,
+      "name": "plex-media-server",
+      "prompt": "根据以下中文草稿写一篇英文 use case：Plex 是一个媒体服务器软件，可以在 Olares 上搭建个人影音中心。教程需要包括：1) Plex 简介和优势（数据隐私）；2) 安装步骤 - 从 Market 搜索 Plex 并安装；3) 配置媒体库 - 添加电影和电视剧文件夹；4) 远程访问设置 - 通过 LarePass VPN；5) 客户端推荐。注意使用标准的 Olares use case 格式，包含 description frontmatter、Learning objectives、Before you begin 等章节。",
+      "expected_output": "A complete English use case for Plex Media Server following Olares conventions, with all standard sections including frontmatter, learning objectives, prerequisites, installation steps, and next steps"
+    }
+  ]
+}
