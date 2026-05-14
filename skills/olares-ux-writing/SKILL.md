@@ -9,6 +9,8 @@ metadata:
 
 Write and review user-centered interface copy for Olares products. This skill enforces the Olares UX writing and localization guidelines.
 
+Use Atlassian Design's content foundations as the closest external benchmark for UX/UI content design. Olares-specific terminology, product context, and localization rules take precedence when they differ.
+
 ## When to Use
 
 - Writing or editing UI strings (buttons, labels, titles, messages, forms)
@@ -31,6 +33,10 @@ Write and review user-centered interface copy for Olares products. This skill en
 
 For the full approved wordlist and glossary, see `wordlist.md` and `glossary.md` in the i18n directory.
 
+**External content design reference**
+- Atlassian Design Content: `https://atlassian.design/foundations/content/`
+- Relevant sections: Style, grammar, and punctuation; Voice and tone; Designing messages; Inclusive language.
+
 ## Project-Specific Context
 
 **Olares device**: Any hardware that has Olares OS installed, activated or not.
@@ -47,7 +53,47 @@ For the full approved wordlist and glossary, see `wordlist.md` and `glossary.md`
 
 **Legacy brand name**: `Terminus` is an old brand name. Replace with `Olares` in all user-facing UI.
 
-**Reused component labels**: Some button labels (e.g., `Confirm`, `Next`) are shared across multiple screens. Changing them affects consistency everywhere. Always check with the user before modifying widely reused strings.
+**Reused component labels**: Some labels (for example `Name`, `Password`, `File`, `Confirm`, `Next`) are shared across multiple screens. Changing them affects consistency everywhere. Treat shared labels as reuse-sensitive and check usage before changing their value.
+
+## i18n Review Workflow
+
+Use this workflow when reviewing changed i18n files or editing localized UI copy. The workflow must stand on its own; do not depend on a browser plug-in or VS Code extension being available.
+
+1. **Separate key from value.**
+   - Default to editing values only.
+   - Do not rename i18n keys unless the user explicitly asks for it or the code references are updated in the same change.
+
+2. **Check usage before judging the copy.**
+   - Search the repo for the key, object path, or literal value using available project tools.
+   - If the user or repo provides reuse notes, use them; do not assume a specific support file exists.
+   - When relevant, inspect how the UI renders the value: plain text, placeholder, helper text, rich text, toast, dialog, or title.
+
+3. **Classify usage risk.**
+   - **No references found**: mark as `Orphan candidate`. Do not delete it unless the user asks for cleanup.
+   - **One reference found**: optimize against that UI context.
+   - **Multiple references found**: mark as `Reuse risk`; keep the value generic unless it works for every context or a context-specific key is added.
+   - **Dynamic or unresolved references**: mark as `Needs UI context`; do not assume it is unused.
+
+4. **Decide whether to edit, discuss, or leave unchanged.**
+   - Edit directly only when the issue is clear, context is known, and reuse risk is low.
+   - Mark for discussion when the copy is UX-compliant but questionable for user habits, industry terms, product intent, or UI constraints.
+   - Keep generic labels generic when they are reused: `Name`, `Password`, `File`, `Bucket`, `Confirm`, `Next`.
+
+5. **Do not mark by adding comments blindly.**
+   - Use the review output to mark issues.
+   - Do not add TODOs, inline comments, or i18n comments only to flag a review concern.
+   - Add a comment only when the user asks for persistent in-file documentation or when an existing repo convention requires it.
+
+### Review Output Categories
+
+When useful, group findings by decision type:
+
+- **Must fix**: inaccurate, misleading, broken, inaccessible, or inconsistent with required terminology.
+- **Reuse risk**: the value is used by multiple screens or appears to be a generic field label.
+- **Orphan candidate**: no references found; do not delete without a cleanup decision.
+- **Needs UI context**: rendering, component behavior, or runtime path is unclear.
+- **Discuss**: acceptable by UX writing rules, but questionable for industry norms, user habits, or the actual scenario.
+- **Leave as is**: deliberately unchanged because the current copy is safer or more reusable.
 
 ## Core Principles
 
@@ -70,6 +116,11 @@ For the full approved wordlist and glossary, see `wordlist.md` and `glossary.md`
    - ✅ `Files larger than 2 GB cannot be uploaded.`
    - ❌ `Due to system limitations, files that exceed 2 GB in size are not able to be uploaded at this time.`
 8. **Keep sentences under 25 words.** Split or restructure longer sentences.
+9. **Match tone to the user’s state.**
+   - Blocked, confused, or under pressure: be practical, direct, and reassuring. Give only what they need and the next action.
+   - Successful or finished: be concise; add warmth only for meaningful, low-frequency moments.
+   - New concept or onboarding: be more explanatory, but still short and scannable.
+10. **Design the message, not just the sentence.** Identify whether the text is an error, warning, success, information message, empty state, or feature discovery before editing it.
 
 ### Please and Sorry
 
@@ -113,6 +164,18 @@ Use courtesy words only when:
 | because | due to the fact that |
 | because of | due to |
 
+### Abbreviations and Short Forms
+
+- Avoid `e.g.`, `i.e.`, `etc.`, and `&` in customer-facing UI. They are less localizable and can be confusing for assistive technologies.
+  - ✅ `For example`
+  - ❌ `e.g.`
+  - ✅ `and`
+  - ❌ `&`
+- Use the full name of features, apps, and concepts the first time they appear unless space is severely constrained.
+- Do not use apostrophes for plural abbreviations.
+  - ✅ `1990s`, `APIs`
+  - ❌ `1990’s`, `API’s`
+
 ### Platform-Neutral Interaction Verbs
 
 Avoid `click` and `tap`.
@@ -143,9 +206,10 @@ Write these exactly:
 
 ### Articles in UI
 
-Omit `a`, `an`, `the` in short labels (buttons, tabs, toasts, empty states) when the verb is unambiguous.
+Omit `a`, `an`, `the` in buttons, labels, tabs, and action-based headings when the verb is unambiguous.
 - ✅ `Create account`, `Add user`, `Open file`
 - Keep articles in flowing prose and when dropping them causes ambiguity.
+- Keep articles in empty states and explanatory body copy when they make the text more natural or easier to translate.
 
 ## Error Message Vocabulary
 
@@ -195,12 +259,22 @@ Different error words carry different weight.
   - ❌ `Parsing content. Please wait...`
 - **No colon after field labels.** `Username` not `Username:`
 - **Bold UI element names.** No quotes or italics.
-  - ✅ `Click **Save** to continue.`
-  - ❌ `Click 'Save' to continue.`
+  - ✅ `Select **Save** to continue.`
+  - ❌ `Select 'Save' to continue.`
+- **Quotation marks and apostrophes in UI copy**:
+  - Use curly apostrophes in user-facing prose: `don’t`, `you’re`, `device’s`.
+  - Use quotation marks sparingly. For direct quotations or cited text in UI prose, use curly double quotation marks: `“...”`.
+  - Use single quotation marks only for nested quotations or when defining/emphasizing a word. Do not use single quotation marks around UI elements, product names, placeholders, or links.
+  - Do not use quotation marks to emphasize UI controls, page titles, app names, or surface names. Use bold when the UI supports rich text; otherwise write the name plainly.
+  - Code, commands, literal strings, file paths, and i18n object syntax may use straight quotes as required. Do not treat TypeScript string delimiters as user-facing punctuation.
+  - ✅ `Select **Agree** to accept these terms.`
+  - ✅ `Select Agree to accept these terms.` (when rich text is unavailable)
+  - ❌ `Select “Agree” to accept these terms.`
+  - ❌ `Open 'Files' to manage your documents.`
 - **Hyphenated compounds**: capitalize only the first word in sentence case.
   - ✅ `Read-only`, `Multi-node read-only`
   - ❌ `Read-Only`
-- **Avoid repeated prepositions**: `Turn on Bluetooth on your phone` → `Your phone's Bluetooth must be on` or `Turn on your phone's Bluetooth`.
+- **Avoid repeated prepositions**: `Turn on Bluetooth on your phone` → `Your phone’s Bluetooth must be on` or `Turn on your phone’s Bluetooth`.
 
 ## Numbers, Dates & Times
 
@@ -214,8 +288,21 @@ Different error words carry different weight.
 - **Time**: AM/PM uppercase with space. `10:45 AM`, `3 PM`
   - Use `noon` and `midnight` instead of `12:00 PM` and `12:00 AM`.
 - **Time abbreviations**: `d`, `hr`, `min`, `sec`. `5 min`, `1 hr`, `30 sec`
+- **Progress count**: use `of`, not `/`, when space allows.
+  - ✅ `Step 1 of 2`
+  - ❌ `Step 1/2`
 
 ## UI Labels & Buttons
+
+### Titles and Headings
+
+- Use sentence case and no end punctuation.
+- Prefer action-oriented headings when the screen or dialog is task-based.
+  - ✅ `Create work item`
+  - ❌ `Creating a work item`
+- Avoid gerunds for UI headings unless they describe a temporary system state.
+- Avoid question titles unless the user must make a decision.
+- Keep warning and error titles scannable. They should state what happened or what may happen, not explain the full next step.
 
 ### Button Labels
 
@@ -246,23 +333,26 @@ Different error words carry different weight.
 | Modify (password, avatar, permissions) | Change xxx | Save, Cancel |
 | Delete | Delete xxx | Delete, Cancel |
 
-> Note: dialog titles use "New xxx" regardless of whether the trigger button says Create or Add.
+> Note: dialog titles use `New xxx` regardless of whether the trigger button says Create or Add.
 
 ### Referring to UI Elements in Text
 
 - **Buttons and input boxes**: omit descriptor.
-  - ✅ `Click **Continue**.` / `Enter your email address.`
-  - ❌ `Click the **Continue** button.` / `Fill in the "Email" field.`
+  - ✅ `Select **Continue**.` / `Enter your email address.`
+  - ❌ `Select the **Continue** button.` / `Fill in the "Email" field.`
 - **Tabs and checkboxes**: include descriptor.
   - ✅ `On the **Alignment** tab, clear the **User** checkbox.`
 - **Unlabeled icons**: `the + function + icon`
-  - ✅ `Click the color picking icon.`
+  - ✅ `Select the color picker icon.`
+- Avoid `>` in navigation paths because assistive technologies may read it as "greater than."
+  - ✅ `Go to **Settings**, then **Network**.`
+  - ❌ `Go to **Settings** > **Network**.`
 
 ## Confirmation Dialogs
 
 Use only for irreversible or high-impact actions.
 
-- **Title states the consequence directly.** No "Are you sure?"
+- **Title states the decision or consequence directly.** No "Are you sure?"
   - ✅ `Delete this folder?`
   - ❌ `Are you sure?`
 - **Omit description if the title is already clear.**
@@ -271,6 +361,35 @@ Use only for irreversible or high-impact actions.
   - `Save` / `Don't Save` / `Cancel`
 
 ## UI Messages
+
+### Message Anatomy
+
+- Start by identifying the message type:
+  - **Error**: a problem has already occurred. Explain what happened and how to move forward.
+  - **Warning**: a potential problem may happen if the user continues. Explain the consequence before the action.
+  - **Success**: confirm the outcome, then get out of the way.
+  - **Information**: add context that helps the user decide or understand.
+  - **Empty state**: explain why there is no content and what the user can do next.
+  - **Feature discovery**: explain why the feature matters and what to try next.
+- Keep body copy to 1–2 sentences.
+- Do not repeat the title in the body.
+- If the reason is unknown, do not invent one. State that something went wrong and offer a next step.
+- Avoid sending the user elsewhere for basic context. If support content is necessary, use a descriptive link.
+
+### Title Pattern by Message Type
+
+Use the title pattern that matches the message type:
+
+| Message type | Title pattern | Example |
+|--------------|---------------|---------|
+| Task dialog | Imperative verb + object | `Set local password` |
+| Confirmation | Decision or consequence | `Delete this folder?` |
+| Error | What failed or what is blocked | `Unable to connect` |
+| Warning | Possible consequence | `Your bill may increase` |
+| Success | Outcome | `Profile updated` |
+| Empty state | Current state | `No passwords yet` |
+
+Do not force an imperative title onto errors, warnings, confirmations, or empty states.
 
 ### Embedded Messages (Helper Text, Tooltips, Empty States)
 
@@ -282,7 +401,21 @@ Use only for irreversible or high-impact actions.
   - ❌ `Folder name`
 - **Clarity over brevity**: When the user emphasizes that the layout is adaptive or that explaining the scenario matters more than fitting on one line, do not force overly concise copy that sacrifices accuracy. Avoid marketing words like `Streamline` in instructional UI.
 
+**Field Labels, Optionality, and Helper Text**
+
+- Field labels name the data; helper text explains constraints, examples, consequences, or context.
+- Do not duplicate optionality in both the label and helper text.
+- Use label-level optionality (`Bucket (optional)`) only when there is no helper area and the optional status needs to be visible while scanning.
+- Use helper text (`Optional`) when the component has a dedicated hint/helper area or the label is reused.
+- Do not use placeholders as labels. Use placeholders only for examples or expected formats.
+
 **Empty States**
+
+- Use an informative, scannable title.
+- Include the reason for the empty state and a next step when one exists.
+- If the user finished or cleared a task, acknowledge completion instead of implying an error.
+- Keep empty-state CTAs specific, imperative, and 1–2 words.
+- Avoid too many CTAs on one page.
 
 | Scenario | Use | Avoid |
 |----------|-----|-------|
@@ -300,13 +433,18 @@ Use only for irreversible or high-impact actions.
   - ✅ `Folder added`, `Profile updated`, `App installed`
   - For verb-only: past participle (`Copied`, `Refreshed`, `Saved`)
   - When unclear: `Verb-ing + completed` (`Binding completed`)
+  - Do not add a CTA unless there is a useful follow-up.
+  - Repeated success messages should be brief and low on delight.
 - **Failure**: `Unable to + Verb + Object`
   - ✅ `Unable to add feed`, `Unable to rename file`
   - For verb-only: `Verb / Verb-ing + failed` (`Refresh failed`, `Binding failed`)
+- **Warnings**: tell the user the potential consequence before the action. Avoid playful wording.
+  - ✅ `Your bill may increase`
+  - ❌ `Time to pay up!`
 
 ### Blocking Messages (Dialogs, Alert Bars)
 
-- **Title**: start with an imperative verb that names the current task.
+- **Task dialog title**: start with an imperative verb that names the current task.
   - ❌ `Info`
   - ✅ `Set local password`
 - **Description**: supplement the impact, don't restate the title.
@@ -314,6 +452,19 @@ Use only for irreversible or high-impact actions.
   - ✅ Description: `The operation cannot be undone.`
 - **Delete description if there's no extra information.**
 - **Every dialog must have a cancel/exit path.**
+- For warnings and errors, CTA labels should be specific imperative verbs. Avoid `OK`, `Done`, `Yes`, and `No` unless they are truly the clearest choices.
+- For errors, prefer `we` or neutral phrasing when naming the problem would otherwise blame the user.
+  - ✅ `The connection was interrupted`
+  - ❌ `You lost the connection`
+- For high-risk destructive actions, state the consequence before the button.
+
+### Lists in UI Copy
+
+- Keep list items parallel.
+- Fragment list items: lowercase, no end punctuation.
+- Complete-sentence list items: capitalize each item and end each with a period.
+- Use numbered lists only when order matters.
+- Keep lists short. If there are more than six items, split them into groups.
 
 ### Notifications
 
@@ -359,6 +510,7 @@ Write source English so it translates cleanly.
   - ✅ `Running time: {duration}`
   - ❌ `Connected to Wi-Fi '{networkName}'` (hardcoded quotes)
   - ✅ `Connected to Wi-Fi {networkName}`
+  - If a variable value needs visual separation, use UI layout, rich text, or locale-aware formatting instead of hardcoded quotes.
 - **Singular vs plural**: Titles often use plural for scan results (`No Olares devices found`), while body copy may use singular for the user's specific device (`Make sure your Olares device is on the same network`). This is natural in English and does not need forced uniformity.
 
 ### Placeholders & Plurals
@@ -381,10 +533,20 @@ Write source English so it translates cleanly.
 
 Before finalizing any UI string:
 
+- [ ] Key and value are separated; do not rename keys unless code references are updated
+- [ ] Usage checked: no references, one reference, multiple references, or dynamic/unresolved
+- [ ] Reuse risk handled before editing generic labels such as `Name`, `Password`, `File`, `Bucket`, `Confirm`, and `Next`
+- [ ] Review concerns are marked in the report, not by adding comments to i18n files unless explicitly needed
 - [ ] Sentence case, no unnecessary end punctuation
+- [ ] Curly apostrophes in user-facing prose; no quotation marks around UI controls or app names
 - [ ] Second person ("you"), active voice (passive OK for explanatory/system text)
+- [ ] Message type identified first: error, warning, success, information, empty state, or feature discovery
+- [ ] Tone matches user state: practical for blocked/error states; warmer only for successful or low-frequency moments
 - [ ] Specific verb in button labels (1–3 words); check if label is reused across screens before changing
+- [ ] Error/warning/success/empty-state body is 1–2 sentences and does not repeat the title
 - [ ] Error message uses correct weight (`cannot` / `Unable to` / `Failed to` / `Invalid` / `Incorrect`)
+- [ ] CTAs use specific imperative verbs; avoid `OK`, `Done`, `Yes`, and `No`
+- [ ] Avoid `e.g.`, `i.e.`, `etc.`, and `&` in customer-facing UI
 - [ ] No idioms, sports metaphors, or culture-specific references
 - [ ] No string concatenation; placeholders use the codebase standard
 - [ ] No hardcoded dates, times, units, or punctuation around placeholders
