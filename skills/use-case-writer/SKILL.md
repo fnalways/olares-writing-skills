@@ -112,6 +112,10 @@ Do **not** bold hardware or spec mentions (GPU, CPU architecture, VRAM, etc.) in
 
 **Don't invent hardware constraints.** Do not add minimum GPU VRAM, CPU core count, or RAM requirements unless the source material explicitly states them as hard requirements. A demo running on specific hardware is not the same as that hardware being a requirement.
 
+**Do not use conditional prerequisites.** Never write "if you plan to use..." or "when using..." in Prerequisites. Instead:
+- Pick one primary example and declare it in the intro (e.g., "This guide uses a single-model app as an example").
+- Move optional requirements into the relevant subsection.
+
 ```markdown
 ## Prerequisites
 - [Required app/installation] with link to its use case if exists
@@ -155,6 +159,21 @@ When a use case requires a local LLM endpoint (e.g., NemoClaw, Open WebUI, Anyth
    - Always direct users to obtain the endpoint from Settings rather than hardcoding URL templates.
 
 Do NOT tell the user to find the model name in Settings, and do NOT tell the user to find the endpoint on the Launchpad page. The two pieces of info live in different places.
+
+**Single-model app vs Ollama app**
+
+| | Single-model app | Ollama app |
+|:---|:---|:---|
+| What it is | One app packages one specific model | One app hosts multiple models |
+| Install from Market | Search the model name (e.g., `Qwen3.5 27B Q4_K_M (Ollama)`) | Search "Ollama" |
+| Model download | Opens from Launchpad; download starts automatically | Open Ollama from Launchpad, then run `ollama pull <model>` |
+| Model name source | Launchpad page displays it (e.g., `qwen3.5:27b-q4_K_M`) | `ollama list` or any model you have pulled |
+| Endpoint source | Settings > Applications > **[Model App]** > Shared entrances | Settings > Applications > **Ollama** > Shared entrances |
+| Endpoint selection | Select the model app name (or "Ollama API" if shown) | Select **Ollama API** |
+| Endpoint format | `http://{hash}.shared.olares.com` | `http://{hash}.shared.olares.com` |
+| Model ID for consumers | Exact model name shown on the app page | Any downloaded model ID (e.g., `qwen3.5:9b`) |
+
+When writing a use case, **default to the single-model app flow** unless the source material explicitly uses Ollama. This avoids forcing the user to install an extra app and pull models manually.
 
 #### Feature sections
 
@@ -237,6 +256,19 @@ When the use case involves a client app outside Olares (phone app, desktop app, 
 - Use `json` for configuration
 - Use `text` for plain text examples
 
+**Long examples and prompts**
+When including a long code block, prompt, or transcript that exceeds 20 lines, collapse it with a `details` container so it does not dominate the page:
+
+```markdown
+::: details Example: [specific description]
+```text
+[content]
+```
+:::
+```
+
+The title must be specific (e.g., `Example: mini BFF prompt`), not generic (`Example prompt`).
+
 #### Images
 Use this format for screenshots:
 ```markdown
@@ -255,6 +287,22 @@ When screenshots are not yet available, use HTML comments as placeholders so the
 - LarePass VPN: `/images/manual/get-started/larepass-vpn-mobile.png`, `larepass-vpn-desktop.png`.
 - Model app screenshots (Qwen, Gemma, Ollama): `/images/one/<model>.png`, `<model>-downloading.png`, `<model>-downloaded.png`. Check `openwebui.md` for the canonical reference.
 - Shared entrance / endpoint screenshots: search existing use cases (e.g., `deerflow2-shared-entrance.png`) before creating new ones.
+
+**Common reusable screenshot quick reference**
+
+| Screenshot | Path | Notes |
+|:---|:---|:---|
+| Model name on Launchpad (27B) | `/images/manual/use-cases/deerflow2-get-model-name.png` | Shows `qwen3.5:27b-q4_K_M`. Do not use for 9B models. |
+| Model name on Launchpad (9B) | `/images/manual/use-cases/litellm-model-name.png` | Shows `qwen3.5:9b`. Do not use for 27B models. |
+| Shared entrance (generic) | `/images/manual/use-cases/ollama-shared.png` | Settings > Shared entrances page. Works for both Ollama and single-model apps. |
+| LarePass VPN desktop | `/images/manual/get-started/larepass-vpn-desktop.png` | Generic, reusable across use cases. |
+| Model downloading | `/images/one/<model>-downloading.png` | e.g., `qwen3.5-27b-downloading.png` |
+| Model downloaded | `/images/one/<model>-downloaded.png` | e.g., `qwen3.5-27b-downloaded.png` |
+
+**Screenshot placeholder decision tree**
+- Need a new screenshot and will capture it later → `<!-- ![...] -->`
+- Existing screenshot covers the same UI state → use the existing path directly
+- Unsure whether a suitable screenshot exists → start with `<!-- -->`, then search `docs/public/images` and replace if found
 
 Only use placeholders for screenshots that genuinely do not yet exist.
 
@@ -348,6 +396,17 @@ Do NOT bold:
 
 If you find yourself reaching for bold to add emphasis to a single word in prose, leave it plain. Bold is for UI affordances, not voice.
 
+### App name references
+
+**Market app names with qualifiers**
+Single-model apps in Market often include a suffix such as `(Ollama)` in their display name (e.g., `Qwen3.5 27B Q4_K_M (Ollama)`).
+
+- **First occurrence** in a use case: use the full Market name including the suffix.
+- **Subsequent references**: you may shorten to the model name alone (e.g., `Qwen3.5 27B`).
+- **In navigation paths** (Settings > Applications > ...): use the full name so the user can match it exactly in Settings.
+
+**Do not fabricate app names.** If the source material mentions a model but you are unsure of its exact Market name, search existing use cases or leave a placeholder comment.
+
 ### Grammar Patterns
 - Install steps: `"Click **Get**, then **Install**, and wait for installation to complete."`
 - "Navigate to **Settings** > **Applications** > **[App]**"
@@ -424,6 +483,20 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
 
    **Brand and product descriptions for proprietary apps** - For any branded vendor product (e.g., NVIDIA NemoClaw, NVIDIA OpenShell, Cloudflare Workers), look up the official description from the vendor's product page before writing the intro. Do not guess what an acronym stands for or invent a backronym. If WebFetch times out, use `curl -sL --max-time 30 <url>` and grep the result.
 
+   **Screenshot-only information** - When the source material places critical config values (env var names, endpoint formats, exact menu labels) only inside screenshots with no accompanying text, you must still produce actionable steps. Do not leave the user guessing. Apply this fallback:
+   1. Write the most reasonable value based on Olares conventions and the surrounding context.
+   2. Append an HTML comment immediately after the value: `<!-- FIXME: verify against source screenshot -->`.
+   3. Flag it to the user during review so the screenshot can be checked.
+
+   Example:
+   ```markdown
+   - **ANTHROPIC_MODEL**: Enter the model identifier from step 2. For example:
+     ```plain
+     qwen3.5:27b-q4_K_M
+     ```
+     <!-- FIXME: verify against source screenshot -->
+   ```
+
 1. **Analyze the Chinese input** - Identify:
    - The application/tool being documented
    - The main workflow or task
@@ -459,6 +532,12 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
    - Insert under the appropriate category section
    - Within each category, maintain **alphabetical order**
    - Section order: AI → Virtual machine → Entertainment → Productivity → Social
+
+   **AI category ordering guide** - The AI section is not strictly alphabetical. It follows a rough grouping:
+   1. **Major agent/chat apps with sub-pages** (OpenClaw, Hermes Agent, OpenCode, Open WebUI, ComfyUI, NemoClaw)
+   2. **Tool-type AI apps** (Context7, Ollama, Open Notebook)
+   3. **Remaining AI apps in alphabetical order** (ACE-Step → AnythingLLM → Bifrost → Claude Code → ...)
+   Place new AI use cases in the correct alphabetical position within group 3, or in group 1/2 if the app clearly belongs there.
 
    **`docs/.vitepress/usecase.zh.ts`** - Add to Chinese sidebar navigation with the same placement. Use the app name as-is (most app names are not translated). Link prefix is `/zh/use-cases/`.
 
