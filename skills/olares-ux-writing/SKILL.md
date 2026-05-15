@@ -2,7 +2,7 @@
 name: olares-ux-writing
 description: Review and write bilingual (English/Chinese) UX copy for Olares products. Covers UI labels, error messages, notifications, empty states, confirmation dialogs, and onboarding. Enforces Olares-specific style, terminology, punctuation, accessibility, and localization rules. Use when editing or creating interface strings, reviewing i18n keys, or auditing product copy for consistency. For long-form documentation, see olares-docs-writer. For Chinese-to-English use case tutorials, see use-case-writer.
 metadata:
-  version: 0.1.0
+  version: 0.1.1
 ---
 
 # Olares UX Writing
@@ -67,6 +67,7 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
    - Search the repo for the key, object path, or literal value using available project tools.
    - If the user or repo provides reuse notes, use them; do not assume a specific support file exists.
    - When relevant, inspect how the UI renders the value: plain text, placeholder, helper text, rich text, toast, dialog, or title.
+   - For title/body pairs, evaluate the pair as one message. Do not repeat in the body what the title already says.
 
 3. **Classify usage risk.**
    - **No references found**: mark as `Orphan candidate`. Do not delete it unless the user asks for cleanup.
@@ -83,6 +84,19 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
    - Use the review output to mark issues.
    - Do not add TODOs, inline comments, or i18n comments only to flag a review concern.
    - Add a comment only when the user asks for persistent in-file documentation or when an existing repo convention requires it.
+
+### Bilingual i18n Pitfalls
+
+- Judge the **value**, not the key. Many i18n keys preserve old English source text, punctuation, or typos. Do not treat key punctuation as displayed UI punctuation.
+- Check source English as UX copy before translating. Poor English source copy usually creates poor Chinese and small-language translations.
+- Semantic alignment means the same **state, reason, next step, object, condition, and placeholders**. It does not mean word-for-word or sentence-for-sentence translation.
+- Count sentences separately per language. A Chinese value may combine two English sentences naturally, or split one English sentence for readability. Apply end-punctuation rules to each language's actual displayed value.
+- Single-sentence UI values have no end punctuation. If the English value has one sentence and the Chinese value has one sentence, both omit the final period/full stop. If either language has two or more sentences, that language uses sentence punctuation.
+- Title/body pairs must be reviewed together. If the title says `Olares not found`, the body should give the next step instead of repeating `No Olares device found`.
+- Preserve placeholders exactly, including braces, spelling, and casing. If one locale adds or removes `{domain}`, `{version}`, `{count}`, or rich-text spans, treat it as a must-fix issue.
+- Review direct strings in code and native platform files, not only i18n files. Look for changed strings in Vue, TypeScript, Android/iOS resources, Electron locale JSON, and service status messages.
+- For Chinese, avoid mechanical pronouns and demonstratives such as `你的`, `这个`, `该`, and `此` unless they add clarity or ownership. Prefer natural omission when the subject is obvious.
+- For English, avoid `Failed to`, `successfully`, unnecessary `Please`, and `click/tap` unless the UI context requires them.
 
 ### Review Output Categories
 
@@ -149,9 +163,18 @@ Use courtesy words only when:
 | show | display, indicate, demonstrate |
 | get | obtain, acquire, retrieve |
 | need | require, necessitate |
-| about | approximately, roughly |
+| send | transmit |
+| find | locate |
+| ask | request (verb) |
+| give | provide |
+| about | approximately, roughly, regarding, with respect to |
+| more / extra | additional |
+| many | numerous |
+| now | currently, presently |
+| decide / figure out | determine |
 | enough | sufficient |
 | because | due to the fact that |
+| because of | due to |
 | if | in the event that |
 | before | prior to |
 | after | subsequent to |
@@ -161,8 +184,9 @@ Use courtesy words only when:
 | turn on | activate |
 | turn off | deactivate |
 | enter | input, type (for input fields) |
-| because | due to the fact that |
-| because of | due to |
+| admin | administrator (in user-facing UI; keep `Administrator` only for OS-level account names) |
+| sync / resync | synchronize / resynchronize |
+| username | user name |
 
 ### Abbreviations and Short Forms
 
@@ -203,6 +227,7 @@ Write these exactly:
 - `webpage` (not `web page`)
 - `home page` (not `homepage`)
 - `checkbox` (not `check box`)
+- `username` (not `user name`)
 
 ### Articles in UI
 

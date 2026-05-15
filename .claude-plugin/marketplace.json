@@ -12,12 +12,13 @@
   "plugins": [
     {
       "name": "olares-writing-skills",
-      "description": "Writing skills for Olares contributors. Includes Olares documentation writer (VitePress, multiple doc types), use case tutorial writer (Chinese-to-English Olares use cases), and bilingual UX copy reviewer.",
+      "description": "Writing skills for Olares contributors. Includes Olares documentation writer (VitePress, multiple doc types), use case tutorial writer (Chinese-to-English Olares use cases), bilingual UX copy reviewer, and module i18n audit workflow.",
       "source": "./",
       "skills": [
         "./skills/olares-docs-writer",
         "./skills/use-case-writer",
-        "./skills/olares-ux-writing"
+        "./skills/olares-ux-writing",
+        "./skills/olares-i18n-audit"
       ]
     }
   ]
