@@ -2,7 +2,7 @@
 name: olares-ux-writing
 description: Review and write bilingual (English/Chinese) UX copy for Olares products. Covers UI labels, error messages, notifications, empty states, confirmation dialogs, and onboarding. Enforces Olares-specific style, terminology, punctuation, accessibility, and localization rules. Use when editing or creating interface strings, reviewing i18n keys, or auditing product copy for consistency. For long-form documentation, see olares-docs-writer. For Chinese-to-English use case tutorials, see use-case-writer.
 metadata:
-  version: 0.1.1
+  version: 0.1.3
 ---
 
 # Olares UX Writing
@@ -55,6 +55,12 @@ For the full approved wordlist and glossary, see `wordlist.md` and `glossary.md`
 
 **Reused component labels**: Some labels (for example `Name`, `Password`, `File`, `Confirm`, `Next`) are shared across multiple screens. Changing them affects consistency everywhere. Treat shared labels as reuse-sensitive and check usage before changing their value.
 
+**Common product terms**
+- `local password`: 本地密码 / 本地解锁密码. Never call it the LarePass password.
+- `Olares ID bound / not bound`: 绑定 Olares ID / 未绑定 Olares ID.
+- `autofill provider`: 自动填充提供程序.
+- `Drive`: Avoid translating this as 云盘 unless the UI context explicitly means cloud drive. When the storage scope is unclear, prefer 文件 or action-specific copy such as 添加文件.
+
 ## i18n Review Workflow
 
 Use this workflow when reviewing changed i18n files or editing localized UI copy. The workflow must stand on its own; do not depend on a browser plug-in or VS Code extension being available.
@@ -68,6 +74,7 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
    - If the user or repo provides reuse notes, use them; do not assume a specific support file exists.
    - When relevant, inspect how the UI renders the value: plain text, placeholder, helper text, rich text, toast, dialog, or title.
    - For title/body pairs, evaluate the pair as one message. Do not repeat in the body what the title already says.
+   - For changed i18n values, check the corresponding locale value and decide whether the change needs to be mirrored.
 
 3. **Classify usage risk.**
    - **No references found**: mark as `Orphan candidate`. Do not delete it unless the user asks for cleanup.
@@ -79,6 +86,8 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
    - Edit directly only when the issue is clear, context is known, and reuse risk is low.
    - Mark for discussion when the copy is UX-compliant but questionable for user habits, industry terms, product intent, or UI constraints.
    - Keep generic labels generic when they are reused: `Name`, `Password`, `File`, `Bucket`, `Confirm`, `Next`.
+   - If a reused generic key needs context-specific wording, keep or restore the generic value, add a context-specific key, and update only the relevant code reference.
+     - Example: keep `select_file` as `File` / `文件`; add `select_file_title` for a file picker title.
 
 5. **Do not mark by adding comments blindly.**
    - Use the review output to mark issues.
@@ -90,13 +99,24 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
 - Judge the **value**, not the key. Many i18n keys preserve old English source text, punctuation, or typos. Do not treat key punctuation as displayed UI punctuation.
 - Check source English as UX copy before translating. Poor English source copy usually creates poor Chinese and small-language translations.
 - Semantic alignment means the same **state, reason, next step, object, condition, and placeholders**. It does not mean word-for-word or sentence-for-sentence translation.
+- Source of truth is usually English, but not always. If the user says to use Chinese as the source, or screenshots/context show the Chinese value better matches the UI, align English to Chinese instead.
+- When only one locale changes, check whether the paired locale needs the same semantic change. It is okay to leave a one-locale-only change when it only fixes punctuation, spacing, typography, or naturalness in that locale.
+- For step-by-step instructions, keep the strategy consistent across locales. Do not make English a navigation path and Chinese a search-based path unless the platforms or OS versions truly differ.
 - Count sentences separately per language. A Chinese value may combine two English sentences naturally, or split one English sentence for readability. Apply end-punctuation rules to each language's actual displayed value.
 - Single-sentence UI values have no end punctuation. If the English value has one sentence and the Chinese value has one sentence, both omit the final period/full stop. If either language has two or more sentences, that language uses sentence punctuation.
 - Title/body pairs must be reviewed together. If the title says `Olares not found`, the body should give the next step instead of repeating `No Olares device found`.
 - Preserve placeholders exactly, including braces, spelling, and casing. If one locale adds or removes `{domain}`, `{version}`, `{count}`, or rich-text spans, treat it as a must-fix issue.
+- For `<i18n-t>` or rich-text slot translations, preserve every slot placeholder in every locale. If slot content contains UI names such as `Settings` or `General`, localize those names too instead of hardcoding English.
 - Review direct strings in code and native platform files, not only i18n files. Look for changed strings in Vue, TypeScript, Android/iOS resources, Electron locale JSON, and service status messages.
 - For Chinese, avoid mechanical pronouns and demonstratives such as `你的`, `这个`, `该`, and `此` unless they add clarity or ownership. Prefer natural omission when the subject is obvious.
+- For Chinese parentheses, follow GB/T 15834-2011: use half-width `()` when the content inside is entirely Western letters, digits, units, or symbols (`磁盘用量 (GiB)`, `温度 (°C)`, `网络流量 (Mbps)`, `占比 (%)`). Use full-width `（）` only when the content contains Chinese characters (`备注（仅限管理员）`, `集群（K8s 节点）`). Do not blanket-apply full-width brackets in zh just because the surrounding text is Chinese.
 - For English, avoid `Failed to`, `successfully`, unnecessary `Please`, and `click/tap` unless the UI context requires them.
+- Avoid `successfully` by default, but allow it for first-run, identity-creation, or other low-frequency milestone moments when product context needs stronger confirmation.
+- When deciding whether to translate a foreign term in Chinese UI, match the audience and the product layer:
+  - **Translate** common verbs, time units, and high-level product states for end-user surfaces (Dashboard, Files, Market). Examples: `Read` → `读取`, `Write` → `写入`, `1 minute` → `1 分钟`, `Running` / `Completed` / `Warning` → `运行中` / `已完成` / `异常`.
+  - **Keep English** for technical primitives shown to admins or developers (Control Hub, logs, Pod-level views). K8s phase names and event reasons (`Pending`, `CrashLoopBackOff`, `ImagePullBackOff`) are the de-facto standard and should not be translated — admins need them to search docs and correlate with alerts.
+  - **Never translate**: international units and symbols (`MB/s`, `Mbps`, `RPM`, `%`, `°C`, `GiB`, `IOPS`), protocol or hardware acronyms (`CPU`, `GPU`, `IPv4`, `IPv6`, `DNS`, `DHCP`), brand and product names (`Olares`, `LarePass`).
+  - The same English word may translate in one surface and stay in English in another — that is correct, not an inconsistency. A Dashboard `Running` (aggregated product status) and a Control Hub `Running` (K8s Pod phase) are different abstractions even when the word matches.
 
 ### Review Output Categories
 
@@ -269,11 +289,32 @@ Different error words carry different weight.
 | Dialog body (multiple sentences) | Period on each sentence |
 | Error messages (single sentence) | None |
 | Error messages (multiple sentences) | Period on each sentence |
+| Questions | Question mark |
+| Text that introduces a list, value, version, or concatenated runtime content | Colon |
+
+Use this decision tree:
+
+1. If the value is a button, label, title, placeholder, tab, menu item, or one-sentence toast/error, omit the final period/full stop.
+2. If the value contains two or more sentences, punctuate every sentence.
+3. If the value asks the user to decide, use a question mark.
+4. If the value is immediately followed by a list, child rows, a version, a value, or concatenated runtime text, use a colon.
+5. If the value describes an ongoing process, use no ellipsis unless the UI convention specifically uses ellipses for loading states.
+
+Examples:
+
+- `Incoming version: {version}` / `待传入版本：{version}`
+- `Delete this source? This operation cannot be undone.`
+- `Processing app data`
+- `No apps match {keyword}`
 
 ### Other Rules
 
 - **Slash**: no spaces around it. `Richtext/Markdown`
-- **Number + unit**: add a space. `71.82 MB`, `100 GB`
+- **Number + unit**: letter units take a space; symbol units do not.
+  - Space: `71.82 MB`, `100 GB`, `5 min`, `3.2 GHz`, `45 W`, `1200 RPM`, `8 cores`, `120 KB/s`
+  - No space: `50%`, `45°`, `25°C`, `77°F`
+  - Follows Microsoft Style Guide. `%` and degree symbols (`°`, `°C`, `°F`) are treated as part of the number, not a separate unit token.
+  - Apply consistently across labels, values, and body copy. Do not mix `25 °C` and `25°C` in the same product.
 - **Multiplication sign**: use `×` with spaces. `400 × 400`
 - **Number ranges**: use en dash `–` without spaces. `8–32 characters`
 - **Time ranges**: use `to` with spaces. `10:00 AM to 2:00 PM`
@@ -307,7 +348,7 @@ Different error words carry different weight.
   - Exception: measurements (`3 GB`, `5 min`), space-constrained UI, and never start a sentence with a numeral.
 - **4+ digits**: add commas. `1,024` / `65,536`
   - Exception: years and pixel dimensions.
-- **Percentages**: body copy uses "percent." UI labels use `%`.
+- **Percentages**: body copy uses "percent." UI labels use `%` with no space before it. `50%`, not `50 %`.
 - **Dates**: spell out month, no ordinals. `June 1, 2025`
   - In a sentence: `The June 1, 2025, update includes...`
 - **Time**: AM/PM uppercase with space. `10:45 AM`, `3 PM`
@@ -356,7 +397,7 @@ Different error words carry different weight.
 | New / Add | New [object] | Create, Cancel (or Add, Cancel) |
 | Edit properties | Edit xxx | Save, Cancel |
 | Modify (password, avatar, permissions) | Change xxx | Save, Cancel |
-| Delete | Delete xxx | Delete, Cancel |
+| Destructive confirmation | Delete xxx? | Delete, Cancel |
 
 > Note: dialog titles use `New xxx` regardless of whether the trigger button says Create or Add.
 
@@ -377,13 +418,52 @@ Different error words carry different weight.
 
 Use only for irreversible or high-impact actions.
 
-- **Title states the decision or consequence directly.** No "Are you sure?"
+- **Review the title, body, options, and buttons as one message group.** Do not polish one string in isolation when checkboxes, warnings, or a second step change the action scope.
+- **Title states the decision or consequence directly.** Avoid generic `Are you sure?` and never use ungrammatical `Are you sure to...`.
   - ✅ `Delete this folder?`
+  - ✅ `Uninstall {app}?`
   - ❌ `Are you sure?`
-- **Omit description if the title is already clear.**
-- **Use specific verbs for destructive actions.** `Delete`, `Remove`, `Discard` — not `OK` or `Yes`.
+  - ❌ `Are you sure to uninstall {app}?`
+- **If there is both a title and body, split responsibilities.**
+  - Title asks the decision: `Delete this source?`
+  - Body explains consequence, scope, condition, or next step: `This operation cannot be undone.`
+  - Avoid bodies that only repeat the title: `Are you sure you want to delete this source?`
+- **Omit the body if it adds no new information.**
+- **Use specific verbs for destructive actions.** `Delete`, `Remove`, `Uninstall`, `Discard` — not `OK`, `Yes`, or `Confirm`.
+- **Choose the verb by what happens to the object.**
+  - `Delete`: permanent destruction of the object or record.
+  - `Remove`: take something out of a list, group, local source, or device while the original may still exist.
+  - `Uninstall`: remove an installed app or package from a runtime environment.
+  - `Discard`: abandon unsaved changes or drafts.
+- **For dialogs with options, connect the title, option labels, and final action.**
+  - Title: primary action (`Uninstall {app}?`)
+  - Body: instructs option selection (`Select what else to remove`)
+  - Checkbox labels: additive scope (`Also remove this app’s local data`)
+  - Button: actual next step (`Continue` if another risk step follows, otherwise `Uninstall`)
+- **For high-risk optional scope, use a second confirmation step.** If an option affects other users, shared services, billing, security, or permanent data deletion, first let the user choose the option, then show a second dialog focused only on that added risk.
+  - Step 1 title: `Uninstall {app}?`
+  - Step 1 body: `Select what else to remove`
+  - Step 1 option: `Also uninstall the shared server (affects all users)`
+  - Step 1 button: `Continue`
+  - Step 2 title: `Uninstall shared server?`
+  - Step 2 body: `This immediately stops app access for all users and permanently deletes stored user data for {app}. This action cannot be undone.`
+  - Step 2 button: `Uninstall`
 - **Unsaved changes**: use three buttons.
-  - `Save` / `Don't Save` / `Cancel`
+  - `Save` / `Don’t save` / `Cancel`
+
+### Transactional Actions
+
+Use concise action copy, but make the object, price, period, and consequence clear.
+
+- **Buttons**: use the action verb only when the surrounding context names the object.
+  - ✅ `Buy`, `Subscribe`, `Restore purchase`
+  - ❌ `Do you want to buy`
+- **Confirmation title/body**: use a compact decision question.
+  - ✅ `Buy {name} for {price} {unit}?`
+  - ✅ `Subscribe for {price}/month?`
+  - ❌ `Do you want to buy {name}?` (usually too conversational and less specific)
+- **Risk details matter more than softening the question.** For subscriptions, renewals, paid upgrades, non-refundable purchases, or token spending, state the amount, billing period, renewal/cancellation behavior, and irreversible outcome in the body.
+- **Button label should match the final charge action.** Use `Buy`, `Subscribe`, `Pay`, or `Confirm purchase`; avoid `OK`, `Done`, and vague `Confirm`.
 
 ## UI Messages
 
