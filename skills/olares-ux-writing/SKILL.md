@@ -31,7 +31,7 @@ Use Atlassian Design's content foundations as the closest external benchmark for
 - `CPU`, `API`, `Wi-Fi`, `Olares`, `LarePass`
 - Never `Cpu`, `api`, `olares`, `larepass`, `WiFi`
 
-For the full approved wordlist and glossary, see `wordlist.md` and `glossary.md` in the i18n directory.
+For the full approved wordlist and glossary, see `references/wordlist.md` and `references/glossary.md` alongside this skill. The same files also live at `olares-files/i18n/wordlist.md` and `olares-files/i18n/glossary.md` and are kept in sync.
 
 **External content design reference**
 - Atlassian Design Content: `https://atlassian.design/foundations/content/`
@@ -60,6 +60,8 @@ For the full approved wordlist and glossary, see `wordlist.md` and `glossary.md`
 - `Olares ID bound / not bound`: 绑定 Olares ID / 未绑定 Olares ID.
 - `autofill provider`: 自动填充提供程序.
 - `Drive`: Avoid translating this as 云盘 unless the UI context explicitly means cloud drive. When the storage scope is unclear, prefer 文件 or action-specific copy such as 添加文件.
+- `Files` (the Olares app): Chinese translates to `文件管理器`, not `文件`. `文件` is too generic and gets confused with literal file references in body copy. The English `Files` keeps brand-style initial capital and may be bolded as a UI element name.
+- `Log in / Log out` (not `sign in` / `sign out`): Olares uses `Log in` and `Log out` consistently across all UI surfaces. Do not propose `sign in` / `sign-in` even though Microsoft Style and similar guides prefer it. Chinese equivalent: 登录 / 退出登录.
 
 ## i18n Review Workflow
 
@@ -68,6 +70,7 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
 1. **Separate key from value.**
    - Default to editing values only.
    - Do not rename i18n keys unless the user explicitly asks for it or the code references are updated in the same change.
+   - **Before adding a new key, search the target locale file for the exact key name first.** Single-word generic keys (`add`, `create`, `save`, `delete`, `confirm`, `cancel`, `edit`, `remove`, `next`, `back`, `ok`, `close`, `submit`) almost always already exist somewhere in the same file or a parent scope. Use `grep -n "^\s*<key>:" file` and also check spread-in scopes (`...settings_en`, `...wise_en`). Adding a duplicate silently lets one definition win, causing values to revert unpredictably. If the existing value already fits, reuse it; if it doesn't, use a context-specific key name (`add_user`, `create_backup`) rather than a second generic one.
 
 2. **Check usage before judging the copy.**
    - Search the repo for the key, object path, or literal value using available project tools.
@@ -324,6 +327,10 @@ Examples:
   - ✅ `Parsing content...`
   - ❌ `Parsing content. Please wait...`
 - **No colon after field labels.** `Username` not `Username:`
+- **Space after colons in runtime concatenation.** When code joins an i18n value to dynamic content with `+`, the separator must be `': '` (colon + space), not `':'`. Pipe-style code like `t('olares_ID') + ':' + userName` renders as `Olares ID:yajing`, which is wrong in every language. Always write `t('olares_ID') + ': ' + userName`. The same applies to `<br>`-separated lines: each `key: value` pair needs the space.
+  - ✅ `t('original_password') + ': ' + password`
+  - ❌ `t('original_password') + ':' + password`
+  - Chinese values that already end in `：` (full-width colon) do not need an extra space — the full-width form includes its own visual spacing. Only add the space when the colon is half-width `:`.
 - **Bold UI element names.** No quotes or italics.
   - ✅ `Select **Save** to continue.`
   - ❌ `Select 'Save' to continue.`
@@ -400,6 +407,43 @@ Examples:
 | Destructive confirmation | Delete xxx? | Delete, Cancel |
 
 > Note: dialog titles use `New xxx` regardless of whether the trigger button says Create or Add.
+
+**Create vs Add in Olares**
+
+The distinction is not stylistic — it reflects where the object's identity actually came from.
+
+- Use `Create` when this product surface is where the object is born. Example: creating a backup task, a snapshot, an integration profile that did not exist before.
+- Use `Add` when the identity already exists in another Olares system and this dialog only attaches it to the current scope.
+  - Adding an Olares ID to a device. The Olares ID must be created in LarePass first; the settings dialog only binds it as a local user/member. → `Add user`, not `Create account`.
+  - Adding an existing repo, snapshot, or endpoint to a list.
+- The confirm button must match the title's verb. Title `Add user` → button `Add`, not `Create`. Do not let a reused generic `Create` button leak into an Add flow.
+- The post-action confirmation should match too. `User added: {username}` / `已添加用户：{username}`, not `User account created for {username}` / `已为 {username} 创建用户账户`.
+
+**Verb consistency across a flow**
+
+The Create vs Add distinction is one instance of a general rule: once you commit to a verb in the entry point, every downstream surface uses the same verb. A user who triggered an `Add` action should not see `Create` in the confirm button, the success toast, or the audit log — and vice versa.
+
+Apply this to every verb pair, not only Create/Add:
+
+| Entry-point verb | Confirm button | In-progress / success copy | Inverse action |
+|------------------|----------------|----------------------------|----------------|
+| Add | Add | `{Object} added` | Remove |
+| Create | Create | `{Object} created` | Delete |
+| Delete | Delete | `{Object} deleted` | (no undo) |
+| Remove | Remove | `{Object} removed` | Add back |
+| Enable | Enable | `{Feature} enabled` | Disable |
+| Turn on | Turn on | `{Feature} is on` | Turn off |
+| Activate | Activate | `{Object} activated` | Deactivate |
+| Link | Link | `{Object} linked` | Unlink |
+| Bind | Bind | `{Object} bound` | Unbind |
+
+Common drift to fix during review:
+
+- Title `Remove user` paired with body `This will delete all their data`. The destructive verb in the body upgrades the action and confuses the user — say `remove` consistently, or change the title to `Delete user` if the data really is destroyed.
+- Title `Add backup` with success toast `Backup created`. Pick one: if the user is creating a new backup task here, the title should be `Create backup`; if they're adding an existing one to a schedule, the toast should be `Backup added`.
+- Button `Disable` in a confirmation dialog where the title says `Turn off {feature}`. Use the same surface verb in both — `Turn off` is the user-facing form, `Disable` is the developer-facing form.
+
+Localized verb pairs must move together. If English flips from `Add` to `Create`, Chinese should also flip from `添加` to `创建`, not stay at `添加`.
 
 ### Referring to UI Elements in Text
 
@@ -505,6 +549,24 @@ Do not force an imperative title onto errors, warnings, confirmations, or empty 
   - ✅ `Enter folder name`
   - ❌ `Folder name`
 - **Clarity over brevity**: When the user emphasizes that the layout is adaptive or that explaining the scenario matters more than fitting on one line, do not force overly concise copy that sacrifices accuracy. Avoid marketing words like `Streamline` in instructional UI.
+
+### Tooltip Authoring Rules
+
+Tooltips appear on hover/tap next to a label or icon. They are not full help docs. They explain what the field or option means, not how to find it.
+
+- **Describe the value, not its location.** Never use positional or navigational phrasing inside a tooltip ("under the X page", "in the top right", "click the button on the right", "在……页面下方", "右上角", "上方菜单中"). UI layouts change; tooltips that hard-code a position become silently wrong.
+  - ✅ `The backup URL generated by Olares Space for this specific backup`
+  - ❌ `Find the backup URL in Olares Space, under the backup details page`
+- **One sentence, no end punctuation.** Same rule as other single-sentence UI strings. A tooltip that runs past one sentence usually wants to be docs, not a tooltip.
+- **Disambiguate, don't repeat.** A tooltip should add information that the label alone does not give. If the label is `Backup path`, the tooltip should clarify *which* path (source vs destination, local vs remote), not restate "the path of the backup."
+  - ✅ `Backup path` + tooltip `The folder on this device whose contents will be backed up`
+  - ❌ `Backup path` + tooltip `The path used for the backup`
+- **Use context-specific tooltips when one field has multiple meanings.** If a single field renders for several different scenarios (for example, a `Backup URL` field reused by Olares Space, AWS S3, and Tencent COS), wire the tooltip to a computed value so each scenario gets its own explanation, instead of writing one generic tooltip that fits none.
+- **Do not add tooltips that duplicate permanently visible helper text.** If the field already shows a persistent hint (for example, `Must have at least 4 characters` under a password field), a tooltip repeating the same constraint is noise.
+- **Match destination-page language.** When the entry-row label and the destination page title diverge, align them. Either the row description (tooltip) or the destination page title should make the two match conceptually.
+- **`The` vs `A` in tooltip openers.** When the tooltip describes the specific value the user must provide for the current field, lead with `The`. When the tooltip describes an object that does not yet exist (a new folder, a created snapshot), lead with `A`.
+  - ✅ `The pre-signed URL that grants temporary read access to the backup files`
+  - ✅ `A new folder with this name will be created at the restore location`
 
 **Field Labels, Optionality, and Helper Text**
 
