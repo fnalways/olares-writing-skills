@@ -308,7 +308,7 @@ Only use placeholders for screenshots that genuinely do not yet exist.
 
 ### 8. FAQ Section (if applicable)
 ```markdown
-## FAQ
+## FAQs
 
 ### [Question]
 [Answer]
