@@ -1,8 +1,8 @@
 ---
 name: use-case-writer
-description: Transform Chinese drafts or inputs into polished English Olares documentation use cases. Use this skill when the user provides Chinese content about an application or workflow and wants it converted into the standard Olares use case format. Also trigger when the user mentions creating, writing, or rewriting use cases for the Olares docs site, especially for the docs/use-cases directory. This skill ensures consistent structure, terminology, and style matching existing Olares use cases. For long-form English documentation (manuals, developer docs, troubleshooting), see olares-docs-writer. For UI strings and product copy, see olares-ux-writing.
+description: Transform Chinese drafts or inputs into polished English Olares documentation use cases. Each use case is a multi-file deliverable (English markdown, Chinese @include stub, EN sidebar entry, ZH sidebar entry), not a single markdown file. Use this skill when the user provides Chinese content about an application or workflow and wants it converted into the standard Olares use case format. Also trigger when the user mentions creating, writing, or rewriting use cases for the Olares docs site, especially for the docs/use-cases directory. This skill ensures consistent structure, terminology, and style matching existing Olares use cases. For long-form English documentation (manuals, developer docs, troubleshooting), see olares-docs-writer. For UI strings and product copy, see olares-ux-writing.
 metadata:
-  version: 0.1.0
+  version: 0.2.0
 ---
 
 # Olares Use Case Writer
@@ -12,6 +12,17 @@ Transform Chinese drafts into polished English use cases for the Olares document
 ## Purpose
 
 This skill converts Chinese input (drafts, notes, or descriptions) into properly formatted, publication-ready English use case documentation that follows Olares' established conventions and style.
+
+## Deliverables (all required for every new use case)
+
+A complete task produces **four files**. The English markdown alone is NOT a complete deliverable. Do not stop after producing file 1.
+
+1. `docs/use-cases/<app>.md` — the English use case.
+2. `docs/zh/use-cases/<app>.md` — a one-line file containing `<!--@include: ../../use-cases/<app>.md-->`, so the Chinese site reuses the English content.
+3. Updated `docs/.vitepress/usecase.en.ts` — new entry in the correct category and alphabetical position.
+4. Updated `docs/.vitepress/usecase.zh.ts` — matching entry under the `/zh/use-cases/` link prefix.
+
+If you skip files 2-4, the use case will not appear in the sidebar and will be invisible to readers. See Process step 6 below for exact placement rules.
 
 ## Output Format
 
@@ -32,7 +43,6 @@ head:
 app_version: "X.Y.Z"      # REQUIRED: Current app version from OlaresManifest.yaml
 doc_version: "1.0"        # REQUIRED: Doc version (1.0=initial, 1.1=minor update, 2.0=major rewrite)
 doc_updated: "YYYY-MM-DD" # REQUIRED: Today's date in YYYY-MM-DD format
-authors: ["@username"]    # Optional: Author(s), use array for multiple authors
 ---
 ```
 
@@ -46,7 +56,6 @@ authors: ["@username"]    # Optional: Author(s), use array for multiple authors
 | `app_version` | **Yes** | Get from `OlaresManifest.yaml` → `metadata.version` |
 | `doc_version` | **Yes** | Start with `"1.0"`. Increment: `1.1` for minor updates, `2.0` for major rewrites |
 | `doc_updated` | **Yes** | Current date in YYYY-MM-DD format |
-| `authors` | No | Array format: `["@alice"]` or `["@alice", "@bob"]` for multiple authors |
 
 **How to get `app_version`:**
 1. Find the app's `OlaresManifest.yaml` file
@@ -524,9 +533,15 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
    - Model name acquisition flow uses the Launchpad page; endpoint URL acquisition uses Settings > Shared entrances
    - **Frontmatter includes `app_version`, `doc_version`, `doc_updated`, and `head` keywords** (CRITICAL for new docs)
 
-6. **Update index and navigation** - After creating the use case file, update:
+6. **Create remaining deliverables (REQUIRED, not optional)** - The English markdown file is only one of four required outputs. You MUST also create the Chinese stub and update both sidebar configs. Skipping this step makes the use case invisible on the docs site.
 
-   **`docs/.vitepress/usecase.en.ts`** - Add to English sidebar navigation:
+   **`docs/zh/use-cases/<app>.md`** (REQUIRED) - Create the Chinese version using `@include` to reuse the English content:
+   ```markdown
+   <!--@include: ../../use-cases/<app>.md-->
+   ```
+   This is a single line. The Chinese file inherits the full English doc including frontmatter.
+
+   **`docs/.vitepress/usecase.en.ts`** (REQUIRED) - Add to English sidebar navigation:
    - Each category is a **top-level section** (not nested under "Use cases")
    - Use **sentence-case** for category names: "Virtual machine", "Entertainment", "Productivity"
    - Insert under the appropriate category section
@@ -539,17 +554,19 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
    3. **Remaining AI apps in alphabetical order** (ACE-Step → AnythingLLM → Bifrost → Claude Code → ...)
    Place new AI use cases in the correct alphabetical position within group 3, or in group 1/2 if the app clearly belongs there.
 
-   **`docs/.vitepress/usecase.zh.ts`** - Add to Chinese sidebar navigation with the same placement. Use the app name as-is (most app names are not translated). Link prefix is `/zh/use-cases/`.
+   **`docs/.vitepress/usecase.zh.ts`** (REQUIRED) - Add to Chinese sidebar navigation with the same placement. Use the app name as-is (most app names are not translated). Link prefix is `/zh/use-cases/`.
 
-   **`docs/zh/use-cases/<app>.md`** - Create the Chinese version using `@include` to reuse the English content:
-   ```markdown
-   <!--@include: ../../use-cases/<app>.md-->
-   ```
-   This is a single line. The Chinese file inherits the full English doc including frontmatter.
+   **`docs/use-cases/index.md`** (CONDITIONAL) - Add to "Featured use cases" section only if it's one of the core/essential guides (currently: ComfyUI, OpenClaw, Windows, Steam). Otherwise, it will only appear in the sidebar navigation.
 
-   **`docs/use-cases/index.md`** - Add to "Featured use cases" section only if it's one of the core/essential guides (currently: ComfyUI, OpenClaw, Windows, Steam). Otherwise, it will only appear in the sidebar navigation.
+7. **Verify all deliverables exist** - Before reporting completion, confirm that all four required files have been created or updated:
+   - [ ] `docs/use-cases/<app>.md` exists
+   - [ ] `docs/zh/use-cases/<app>.md` exists with the one-line `@include`
+   - [ ] `docs/.vitepress/usecase.en.ts` contains the new entry
+   - [ ] `docs/.vitepress/usecase.zh.ts` contains the new entry
 
-7. **Output** - Provide the complete Markdown content ready for publication
+   If any file is missing, the task is incomplete. Do not tell the user the use case is ready until all four are in place.
+
+8. **Output** - Provide a short summary listing the four files you created or modified, so the user can spot-check.
 
 ## Example Transformation
 

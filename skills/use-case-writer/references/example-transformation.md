@@ -19,7 +19,6 @@ head:
 app_version: "1.2.3"
 doc_version: "1.0"
 doc_updated: "2025-03-10"
-authors: ["@your-username"]
 ---
 
 # Automate workflows with n8n
