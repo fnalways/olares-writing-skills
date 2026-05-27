@@ -58,6 +58,7 @@ For the full approved wordlist and glossary, see `references/wordlist.md` and `r
 **Common product terms**
 - `local password`: 本地密码 / 本地解锁密码. Never call it the LarePass password.
 - `Olares ID bound / not bound`: 绑定 Olares ID / 未绑定 Olares ID.
+- `account`: Chinese usually uses `账户` for product objects such as Olares accounts, SMB accounts, third-party accounts, and account settings. Use `账号` only when the UI specifically means a login identifier, credential-style account information supplied by an admin, or an established phrase already used in that flow. Do not blanket-replace `账号` and `账户`; keep the term consistent within the same UI flow.
 - `autofill provider`: 自动填充提供程序.
 - `Drive`: Avoid translating this as 云盘 unless the UI context explicitly means cloud drive. When the storage scope is unclear, prefer 文件 or action-specific copy such as 添加文件.
 - `Files` (the Olares app): Chinese translates to `文件管理器`, not `文件`. `文件` is too generic and gets confused with literal file references in body copy. The English `Files` keeps brand-style initial capital and may be bolded as a UI element name.
@@ -77,6 +78,7 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
    - If the user or repo provides reuse notes, use them; do not assume a specific support file exists.
    - When relevant, inspect how the UI renders the value: plain text, placeholder, helper text, rich text, toast, dialog, or title.
    - For title/body pairs, evaluate the pair as one message. Do not repeat in the body what the title already says.
+   - For shared components that count, select, remove, or delete objects, verify the object noun matches the surface. A generic component must not force `item` / `项目` into account, user, file, or integration lists; add a contextual key or prop when needed.
    - For changed i18n values, check the corresponding locale value and decide whether the change needs to be mirrored.
 
 3. **Classify usage risk.**
@@ -112,7 +114,15 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
 - For `<i18n-t>` or rich-text slot translations, preserve every slot placeholder in every locale. If slot content contains UI names such as `Settings` or `General`, localize those names too instead of hardcoding English.
 - Review direct strings in code and native platform files, not only i18n files. Look for changed strings in Vue, TypeScript, Android/iOS resources, Electron locale JSON, and service status messages.
 - For Chinese, avoid mechanical pronouns and demonstratives such as `你的`, `这个`, `该`, and `此` unless they add clarity or ownership. Prefer natural omission when the subject is obvious.
+- For Chinese placeholder spacing, classify what the placeholder renders before editing:
+  - If the placeholder renders as a Chinese UI label or object noun, avoid visible ASCII spaces and rewrite naturally (`暂无{item}` when `{item}` is `知识`).
+  - If the placeholder renders as a number, time, English ID, username, domain, path, port, or other identifier, keep spacing when it improves readability (`第 {index} 项`, `恢复于 {time} 失败`, `重置 {olaresName} 的密码？`).
+  - If the placeholder renders as a user-provided name, prefer Chinese quotation marks in zh copy instead of code-side quotes (`删除知识库“{base}”？`).
+  - Always inspect the call site before changing placeholder spacing. Do not blanket-remove spaces around `{...}` in Chinese.
+  - Lint checks for Chinese placeholder spacing should report suspicious cases with allowlists or annotations, not auto-fix them.
 - For Chinese parentheses, follow GB/T 15834-2011: use half-width `()` when the content inside is entirely Western letters, digits, units, or symbols (`磁盘用量 (GiB)`, `温度 (°C)`, `网络流量 (Mbps)`, `占比 (%)`). Use full-width `（）` only when the content contains Chinese characters (`备注（仅限管理员）`, `集群（K8s 节点）`). Do not blanket-apply full-width brackets in zh just because the surrounding text is Chinese.
+- For Chinese quotation marks, use the same content-based rule as parentheses: when the quoted text is entirely Western letters, digits, or symbols, use curly double quotation marks with a half-width space on each side (`输入 "admin" 以继续`). When the quoted text contains Chinese characters, use full-width curly double quotation marks with no extra spaces (`显示"连接失败"错误`).
+- For ellipsis in ongoing operations: English uses half-width `...` (`Loading...`); Chinese uses a single full-width ellipsis character `…` (`加载中…`).
 - For English, avoid `Failed to`, `successfully`, unnecessary `Please`, and `click/tap` unless the UI context requires them.
 - Avoid `successfully` by default, but allow it for first-run, identity-creation, or other low-frequency milestone moments when product context needs stronger confirmation.
 - When deciding whether to translate a foreign term in Chinese UI, match the audience and the product layer:
@@ -301,7 +311,7 @@ Use this decision tree:
 2. If the value contains two or more sentences, punctuate every sentence.
 3. If the value asks the user to decide, use a question mark.
 4. If the value is immediately followed by a list, child rows, a version, a value, or concatenated runtime text, use a colon.
-5. If the value describes an ongoing process, use no ellipsis unless the UI convention specifically uses ellipses for loading states.
+5. If the value describes an ongoing process, use no ellipsis unless the UI convention specifically uses ellipses for loading states. English uses `...`; Chinese uses `…`.
 
 Examples:
 
@@ -324,8 +334,8 @@ Examples:
 - **Oxford comma**: use in lists of 3+. `Android, iOS, and Windows`
 - **Exclamation mark**: only for genuinely positive moments. Use no more than one.
 - **Ellipsis**: only for ongoing operations. Never in buttons or menus.
-  - ✅ `Parsing content...`
-  - ❌ `Parsing content. Please wait...`
+  - English: `Parsing content...`
+  - Chinese: `正在解析内容…`
 - **No colon after field labels.** `Username` not `Username:`
 - **Space after colons in runtime concatenation.** When code joins an i18n value to dynamic content with `+`, the separator must be `': '` (colon + space), not `':'`. Pipe-style code like `t('olares_ID') + ':' + userName` renders as `Olares ID:yajing`, which is wrong in every language. Always write `t('olares_ID') + ': ' + userName`. The same applies to `<br>`-separated lines: each `key: value` pair needs the space.
   - ✅ `t('original_password') + ': ' + password`
@@ -472,6 +482,7 @@ Use only for irreversible or high-impact actions.
   - Title asks the decision: `Delete this source?`
   - Body explains consequence, scope, condition, or next step: `This operation cannot be undone.`
   - Avoid bodies that only repeat the title: `Are you sure you want to delete this source?`
+- **Base consequence copy on actual behavior.** Inspect the action handler or API before writing the body. If removing an SMB account also removes that account's access to previously shared files, say so; do not stop at a generic `You can add it again later`.
 - **Omit the body if it adds no new information.**
 - **Use specific verbs for destructive actions.** `Delete`, `Remove`, `Uninstall`, `Discard` — not `OK`, `Yes`, or `Confirm`.
 - **Choose the verb by what happens to the object.**
@@ -517,6 +528,7 @@ Use concise action copy, but make the object, price, period, and consequence cle
   - **Error**: a problem has already occurred. Explain what happened and how to move forward.
   - **Warning**: a potential problem may happen if the user continues. Explain the consequence before the action.
   - **Success**: confirm the outcome, then get out of the way.
+  - **Result notification**: a system action has already completed. State the outcome in the title and explain where to view or change it if needed.
   - **Information**: add context that helps the user decide or understand.
   - **Empty state**: explain why there is no content and what the user can do next.
   - **Feature discovery**: explain why the feature matters and what to try next.
@@ -536,9 +548,12 @@ Use the title pattern that matches the message type:
 | Error | What failed or what is blocked | `Unable to connect` |
 | Warning | Possible consequence | `Your bill may increase` |
 | Success | Outcome | `Profile updated` |
+| Result notification | Outcome | `SSH password reset` |
 | Empty state | Current state | `No passwords yet` |
 
 Do not force an imperative title onto errors, warnings, confirmations, or empty states.
+
+For system-completed actions, do not use an imperative title or a question. Use an outcome title such as `SSH password reset`, not `Reset SSH password?`.
 
 ### Embedded Messages (Helper Text, Tooltips, Empty States)
 
@@ -617,6 +632,7 @@ Tooltips appear on hover/tap next to a label or icon. They are not full help doc
 - **Description**: supplement the impact, don't restate the title.
   - ❌ Description: `This will delete the market source.` (restates title)
   - ✅ Description: `The operation cannot be undone.`
+- **Rendering check**: left-align explanatory dialog bodies, especially when the body has multiple sentences, security information, generated credentials, or consequences. Very short acknowledge-only messages may be centered if the component style requires it.
 - **Delete description if there's no extra information.**
 - **Every dialog must have a cancel/exit path.**
 - For warnings and errors, CTA labels should be specific imperative verbs. Avoid `OK`, `Done`, `Yes`, and `No` unless they are truly the clearest choices.
