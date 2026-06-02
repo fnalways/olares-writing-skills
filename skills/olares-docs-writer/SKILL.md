@@ -28,12 +28,14 @@ Step-by-step guides for specific applications or workflows.
 **Structure:**
 1. Frontmatter with `outline` and `description`
 2. Main title (`#`) — descriptive and actionable
-3. Introduction paragraph — what this guide covers
-4. Learning objectives — bullet list of what users will learn
-5. Prerequisites — what users need before starting
-6. Step-by-step instructions — numbered lists with clear actions
-7. Tips and info boxes (`:::tip`, `:::info`)
-8. FAQ section (optional)
+3. State gate (optional) — `:::warning` or `:::info` confirming the user's starting state for tutorials with hard constraints
+4. Introduction paragraph — what this guide covers
+5. Learning objectives — bullet list of what users will learn
+6. Prerequisites — what users need before starting
+7. Step-by-step instructions — numbered lists with clear actions; add verification hints after critical steps
+8. Common mistakes to avoid (optional) — prevent errors before they happen
+9. Tips and info boxes (`:::tip`, `:::info`)
+10. FAQ section (optional)
 
 **Example frontmatter:**
 ```yaml
@@ -52,10 +54,11 @@ Feature explanations and user guides.
 **Structure:**
 1. Frontmatter with `description`
 2. Main title
-3. Concept explanation
-4. Feature overview
-5. How-to sections
-6. Configuration details
+3. "When to use this" paragraph — prevents users from applying the wrong guide
+4. Concept explanation
+5. Feature overview
+6. How-to sections with irreversible-action warnings
+7. Configuration details with common error guidance where applicable
 
 ### 3. Index Pages
 
@@ -141,14 +144,63 @@ For the full template, section guidelines, complex diagnostic step structure, an
 - **Headings**: Concise, often shorter than English equivalent
 - **Steps**: Direct instructions ("点击", "输入", "选择")
 
+## Error-Prevention Design
+
+Every document should be structured to prevent users from making mistakes, not just explain how to do things correctly.
+
+### 1. State gating at entry
+
+Before any steps begin, help users confirm they are in the right state:
+
+- Use a `:::warning` callout at the top of the page when the tutorial requires a specific starting state (e.g., unactivated device, fresh install). A `:::info` callout is acceptable for softer checkpoints.
+- If two states require completely different flows, create two documents and let users choose at the index level. Do not mix incompatible paths in one tutorial.
+- Never bury a hard constraint in a Prerequisites bullet list alone.
+
+### 2. Prevent mistakes before they happen
+
+Within steps, identify the most common errors and block them in advance:
+
+- Use `:::warning` directly inside the step where the mistake would occur.
+- Explain what NOT to do, not just what to do.
+- Add verification sub-steps after critical actions (for example, "Check that X shows Y").
+
+### 3. Guard irreversible actions
+
+Any step that causes data loss, account binding, or cannot be undone must have:
+
+- A `:::warning` callout before the step.
+- A clear description of the consequence.
+- A link to the escape route (for example, how to back up or how to factory reset).
+
+### 4. Use the correct admonition type
+
+Choose the admonition type based on the consequence of ignoring it:
+
+- `:::warning` — Hard constraints, irreversible actions, or conditions that make the tutorial impossible to complete if ignored. Place these at the top of the page and repeat at critical decision points.
+- `:::info` — Background context, optional paths, or supplementary details that don't block the main flow.
+- `:::tip` — Efficiency improvements, shortcuts, or best practices.
+
+Never place a hard constraint in an `:::info` box.
+
+### 5. Review checklist
+
+Before submitting a document, ask these questions:
+
+1. What state is the user most likely in when they open this page? Did I help them confirm this is the right guide?
+2. If a user skips Prerequisites and jumps to Step 1, will they fail? If yes, move the critical prerequisite into the step or add a state gate at the top.
+3. Which step is most commonly done incorrectly? Did I say "Do not X" directly in that step?
+4. Are there any irreversible actions? Did I warn the user before they reach that step?
+5. After critical steps, did I tell the user how to verify they are on track?
+
 ## Markdown Conventions
 
 For VitePress markdown syntax (frontmatter, headings, admonitions, images, icons, code blocks, lists, tables, links), see `references/markdown-conventions.md`.
 
-Two Olares-specific rules to keep in mind:
+Three Olares-specific rules to keep in mind:
 
 - **Bullet labels with bold**: Use bold only when a label acts as a category header (`- **Hardware**: ...`). Do NOT bold for emphasis in body text or in admonition labels (`**Verify changes:**` inside a warning).
 - **Frontmatter required fields**: Every page needs `description`. Most pages also need `outline: [2, 3]`.
+- **Admonition types**: Choose based on consequence, not emphasis. `:::warning` for hard constraints and irreversible actions. `:::info` for supplementary context. `:::tip` for efficiency improvements. Never bury a hard constraint in `:::info`.
 
 ## Common Sections
 
@@ -317,6 +369,8 @@ File location: `/docs/one/` (English) and `/docs/zh/one/` (Chinese)
 8. **Be consistent** with terminology across pages
 9. **Use correct domains** — .com for English, .cn for Chinese
 10. **Check for specialized skills** — `use-case-writer` for use cases, `olares-ux-writing` for UI copy
+11. **Surface hard constraints before learning objectives** — If a tutorial requires a specific starting state, announce it in a `:::warning` at the top. Don't rely on Prerequisites alone.
+12. **Add verification hints after critical steps** — Tell users how to confirm they succeeded before moving on.
 
 ## References
 
