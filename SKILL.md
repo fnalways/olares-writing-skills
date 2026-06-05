@@ -1,6 +1,7 @@
 ---
 name: olares-writing-skills
-description: Writing skills for Olares contributors. Use when the user wants to create or edit documentation, use case tutorials, troubleshooting guides, or UI copy for Olares. Triggers on phrases like "write documentation", "create a use case", "translate docs", "review UI strings", "write troubleshooting guide", "Olares docs", "docs.olares.com". Includes skills for: olares-docs-writer (VitePress documentation in EN/ZH), use-case-writer (Chinese to English use case tutorials), olares-ux-writing (UI labels, errors, dialogs), olares-i18n-audit (i18n consistency checks).
+description: |
+  Writing skills for Olares contributors. Use when the user wants to create or edit documentation, use case tutorials, troubleshooting guides, or UI copy for Olares. Triggers on phrases like "write documentation", "create a use case", "translate docs", "review UI strings", "write troubleshooting guide", "Olares docs", "docs.olares.com". Includes skills for: olares-docs-writer (VitePress documentation in EN/ZH), use-case-writer (Chinese to English use case tutorials), olares-ux-writing (UI labels, errors, dialogs), olares-i18n-audit (i18n consistency checks).
 metadata:
   version: 0.1.0
 ---
