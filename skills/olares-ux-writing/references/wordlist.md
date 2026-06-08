@@ -1176,16 +1176,27 @@ Use without spaces around it. Don't overuse — slashes can be ambiguous to tran
 
 ### `…` (ellipsis)
 
-Use only to indicate an in-progress operation. Don't use in button or menu labels.
+Use the single horizontal ellipsis character `…` (U+2026) in **both English and Chinese**, following the Apple Human Interface Guidelines. Never use three ASCII periods (`...`).
 
-❌ `Save...` (button)  
-✅ `Saving...` (toast)
+Two cases call for an ellipsis:
 
-An ellipsis at the end of an ongoing-operation label is **not** end punctuation. The "single-sentence UI values have no end punctuation" rule does not apply, and lint warnings that treat trailing `...` as a stray period are false positives.
+1. **Ongoing operation** (toasts, status text): `Saving…`, `Collecting…`.
+2. **A button or menu item that needs more input before it can complete** — selecting it opens a dialog or another view to gather that input: `Save as…`, `Move to vault…`, `Add tags…`.
 
-✅ `Collecting...` / `正在收集...`  
-✅ `Parsing content...` / `正在解析...`  
-✅ `Uploading...` / `正在上传...`
+Do **not** add an ellipsis to a control that acts immediately, even if it opens a window that only displays information. The trigger is "more input required," not "a window appears."
+
+✅ `Save as…` (opens a dialog to enter a file name)
+✅ `Saving…` (toast)
+❌ `Save` → `Save…` (Save acts immediately; no input needed)
+❌ `Get info` → `Get info…` (just displays info; no input needed)
+
+An ellipsis at the end of a label is **not** end punctuation. The "single-sentence UI values have no end punctuation" rule does not apply, and lint warnings that treat a trailing `…` as a stray period are false positives.
+
+The ASCII `...` may still appear in an English i18n **key** (for example `'Loading...': 'Loading…'`); keep the key as-is and only use `…` in the displayed **value**.
+
+✅ `Collecting…` / `正在收集…`
+✅ `Parsing content…` / `正在解析…`
+✅ `Uploading…` / `正在上传…`
 
 ---
 

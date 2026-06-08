@@ -122,7 +122,7 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
   - Lint checks for Chinese placeholder spacing should report suspicious cases with allowlists or annotations, not auto-fix them.
 - For Chinese parentheses, follow GB/T 15834-2011: use half-width `()` when the content inside is entirely Western letters, digits, units, or symbols (`磁盘用量 (GiB)`, `温度 (°C)`, `网络流量 (Mbps)`, `占比 (%)`). Use full-width `（）` only when the content contains Chinese characters (`备注（仅限管理员）`, `集群（K8s 节点）`). Do not blanket-apply full-width brackets in zh just because the surrounding text is Chinese.
 - For Chinese quotation marks, use the same content-based rule as parentheses: when the quoted text is entirely Western letters, digits, or symbols, use curly double quotation marks with a half-width space on each side (`输入 "admin" 以继续`). When the quoted text contains Chinese characters, use full-width curly double quotation marks with no extra spaces (`显示"连接失败"错误`).
-- For ellipsis in ongoing operations: English uses half-width `...` (`Loading...`); Chinese uses a single full-width ellipsis character `…` (`加载中…`).
+- For ellipsis in ongoing operations or more-options text, both English and Chinese use the single horizontal ellipsis character `…` (U+2026) (`Loading…`, `加载中…`), following the Apple Human Interface Guidelines. Do not use three ASCII periods (`...`). Note that the ASCII `...` may still appear in an English i18n **key** (for example `'Loading...': 'Loading…'`); keep the key as-is and only fix the displayed **value**.
 - For English, avoid `Failed to`, `successfully`, unnecessary `Please`, and `click/tap` unless the UI context requires them.
 - Avoid `successfully` by default, but allow it for first-run, identity-creation, or other low-frequency milestone moments when product context needs stronger confirmation.
 - When deciding whether to translate a foreign term in Chinese UI, match the audience and the product layer:
@@ -311,7 +311,7 @@ Use this decision tree:
 2. If the value contains two or more sentences, punctuate every sentence.
 3. If the value asks the user to decide, use a question mark.
 4. If the value is immediately followed by a list, child rows, a version, a value, or concatenated runtime text, use a colon.
-5. If the value describes an ongoing process, use no ellipsis unless the UI convention specifically uses ellipses for loading states. English uses `...`; Chinese uses `…`.
+5. If the value describes an ongoing process, use no ellipsis unless the UI convention specifically uses ellipses for loading states. Both English and Chinese use the single ellipsis character `…` (U+2026), not three ASCII periods.
 
 Examples:
 
@@ -333,8 +333,8 @@ Examples:
 - **Time ranges**: use `to` with spaces. `10:00 AM to 2:00 PM`
 - **Oxford comma**: use in lists of 3+. `Android, iOS, and Windows`
 - **Exclamation mark**: only for genuinely positive moments. Use no more than one.
-- **Ellipsis**: only for ongoing operations. Never in buttons or menus.
-  - English: `Parsing content...`
+- **Ellipsis**: use the single ellipsis character `…` (U+2026) in both English and Chinese, following the Apple Human Interface Guidelines; never use three ASCII periods (`...`). Two cases call for it: (1) an ongoing operation (`Parsing content…`), or (2) a button/menu item that needs more input before it can complete — it opens a dialog or another view (`Save as…`, `Move to vault…`). Do not add an ellipsis to a control that acts immediately, even if it opens a window that only displays information (`Save`, `Get info`). The trigger is "more input required," not "a window appears."
+  - English: `Parsing content…`
   - Chinese: `正在解析内容…`
 - **No colon after field labels.** `Username` not `Username:`
 - **Space after colons in runtime concatenation.** When code joins an i18n value to dynamic content with `+`, the separator must be `': '` (colon + space), not `':'`. Pipe-style code like `t('olares_ID') + ':' + userName` renders as `Olares ID:yajing`, which is wrong in every language. Always write `t('olares_ID') + ': ' + userName`. The same applies to `<br>`-separated lines: each `key: value` pair needs the space.
