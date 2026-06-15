@@ -51,6 +51,21 @@ cp -r ~/olares-writing-skills/skills/* ~/.claude/skills/
 git submodule add https://github.com/fnalways/olares-writing-skills .claude/skills/olares-writing-skills
 ```
 
+### Option 5: OpenClaw
+
+Install via OpenClaw's git-based skill installation:
+
+```bash
+openclaw skills install git:fnalways/olares-writing-skills --global
+```
+
+For specific branches or versions:
+
+```bash
+openclaw skills install git:fnalways/olares-writing-skills@branch-name --global
+openclaw skills install git:fnalways/olares-writing-skills --version 1.0.0 --global
+```
+
 ## Usage
 
 Once installed, just ask your agent to help with Olares writing tasks:
