@@ -2,7 +2,7 @@
 name: olares-ux-writing
 description: Review and write bilingual (English/Chinese) UX copy for Olares products. Covers UI labels, error messages, notifications, empty states, confirmation dialogs, and onboarding. Enforces Olares-specific style, terminology, punctuation, accessibility, and localization rules. Use when editing or creating interface strings, reviewing i18n keys, or auditing product copy for consistency. For long-form documentation, see olares-docs-writer. For Chinese-to-English use case tutorials, see use-case-writer.
 metadata:
-  version: 0.1.3
+  version: 0.1.4
 ---
 
 # Olares UX Writing
@@ -700,6 +700,21 @@ Write source English so it translates cleanly.
 
 - Preserve placeholders exactly: spelling, casing, braces, order.
 - **Don't use `(s)` for plurals.** Use abbreviations (`{minutes} min`), move the variable to the end (`Files uploaded: {count}`), or use your i18n framework's plural rules.
+- **Use ICU plural syntax for count-dependent strings.** This is the standard for localization and is required for languages with complex plural rules (Russian, Polish, Arabic, etc.).
+  - ✅ `{count, plural, =1 {1 file selected} other {# files selected}}`
+  - ✅ `{count, plural, =0 {No files} =1 {1 file} other {# files}}`
+  - ❌ `{count} file(s)`
+  - ❌ `'0 item | 1 item | {count} items'` (pipe syntax hard-codes English plural rules and doesn't scale to other languages)
+- **In English, 0 takes the plural form.** `0 files`, `0 items selected`, `0 minutes ago`.
+  - ✅ `count_items_selected: '0 items selected | 1 item selected | {count} items selected'`
+  - ❌ `count_items_selected: '0 item selected | 1 item selected | {count} items selected'`
+- **When code chooses between singular and plural keys, use `=== 1` not `> 1`.** A ternary like `count > 1 ? plural : singular` makes 0 render as singular (`0 item`), which is wrong.
+  - ✅ `count === 1 ? t('files.item') : t('files.items')`
+  - ❌ `count > 1 ? t('files.items') : t('files.item')`
+- **Chinese has no grammatical number.** In zh-CN, a single form with `{count}` usually works for 0, 1, and many.
+  - ✅ `已选择 {count} 个文件`
+  - No need for ICU plural in Chinese unless the surrounding product convention requires it.
+- **Check that the call site passes the count variable.** ICU plural and pipe syntax both need `count` (or the locale-specific plural variable) in the interpolation object. A missing `count` silently renders the literal placeholder or falls back to the wrong form.
 
 ### Text Expansion Reference
 
