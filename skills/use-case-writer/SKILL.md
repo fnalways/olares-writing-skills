@@ -1,8 +1,8 @@
 ---
 name: use-case-writer
-description: Transform Chinese drafts or inputs into polished English Olares documentation use cases. Each use case is a multi-file deliverable (English markdown, Chinese @include stub, EN sidebar entry, ZH sidebar entry), not a single markdown file. Use this skill when the user provides Chinese content about an application or workflow and wants it converted into the standard Olares use case format. Also trigger when the user mentions creating, writing, or rewriting use cases for the Olares docs site, especially for the docs/use-cases directory. This skill ensures consistent structure, terminology, and style matching existing Olares use cases. For long-form English documentation (manuals, developer docs, troubleshooting), see olares-docs-writer. For UI strings and product copy, see olares-ux-writing.
+description: Transform Chinese drafts or inputs into polished English Olares documentation use cases. A use case is first produced as an English deliverable (English markdown, EN sidebar entry, gallery data entry). The Chinese @include stub and ZH sidebar entry are created only after the English version is finalized, to avoid publishing duplicate English content on the Chinese site while the English copy is still changing. Use this skill when the user provides Chinese content about an application or workflow and wants it converted into the standard Olares use case format. Also trigger when the user mentions creating, writing, or rewriting use cases for the Olares docs site, especially for the docs/use-cases directory. This skill ensures consistent structure, terminology, and style matching existing Olares use cases. For long-form English documentation (manuals, developer docs, troubleshooting), see olares-docs-writer. For UI strings and product copy, see olares-ux-writing.
 metadata:
-  version: 0.2.0
+  version: 0.3.0
 ---
 
 # Olares Use Case Writer
@@ -13,16 +13,26 @@ Transform Chinese drafts into polished English use cases for the Olares document
 
 This skill converts Chinese input (drafts, notes, or descriptions) into properly formatted, publication-ready English use case documentation that follows Olares' established conventions and style.
 
-## Deliverables (all required for every new use case)
+## Deliverables
 
-A complete task produces **four files**. The English markdown alone is NOT a complete deliverable. Do not stop after producing file 1.
+A complete initial task produces **three required files**. Do not stop after producing file 1.
+
+### Required for every new use case (English-first)
 
 1. `docs/use-cases/<app>.md` — the English use case.
-2. `docs/zh/use-cases/<app>.md` — a one-line file containing `<!--@include: ../../use-cases/<app>.md-->`, so the Chinese site reuses the English content.
-3. Updated `docs/.vitepress/usecase.en.ts` — new entry in the correct category and alphabetical position.
-4. Updated `docs/.vitepress/usecase.zh.ts` — matching entry under the `/zh/use-cases/` link prefix.
+2. Updated `docs/.vitepress/usecase.en.ts` — new entry in the correct category and alphabetical position.
+3. Updated `docs/.vitepress/data/useCases.ts` — new entry so the use case appears in the filterable gallery on the Use cases index page.
 
-If you skip files 2-4, the use case will not appear in the sidebar and will be invisible to readers. See Process step 6 below for exact placement rules.
+If you skip files 2-3, the use case will not appear in the sidebar or the gallery and will be invisible to readers.
+
+### Created only after English is finalized (Chinese)
+
+4. `docs/zh/use-cases/<app>.md` — a one-line file containing `<!--@include: ../../use-cases/<app>.md-->`, so the Chinese site reuses the English content.
+5. Updated `docs/.vitepress/usecase.zh.ts` — matching entry under the `/zh/use-cases/` link prefix.
+
+**Why defer the Chinese stub?** If the English copy is still being edited, creating the Chinese `@include` stub immediately causes the Chinese URL to display English content. Search engines treat this as duplicate content and may rank the Chinese page lower. Create the Chinese stub only when the English version is stable.
+
+When you do create the Chinese stub, follow the current site convention: if the English page is finalized and you are performing a full AI translation, replace the `@include` with real Chinese content and add the AI-translation warning callout. If the English page is finalized but no full translation is required yet, keep the `@include` stub.
 
 ## Output Format
 
@@ -90,6 +100,11 @@ Include in `head.meta.content`:
 ### 2. Title (H1)
 - Use action-oriented titles (start with a verb)
 - Examples: "Deploy Stable Diffusion for AI image generation", "Stream games from your Olares device"
+- **Check for duplicate H1 titles before finalizing.** Search existing docs with:
+  ```bash
+  find docs -type f -name '*.md' -not -path '*/node_modules/*' | xargs grep -h '^# ' | sort | uniq -d
+  ```
+  If the title already exists, make it more specific by adding the app name, product area, or scenario. For example, prefer "Open WebUI common issues" over "Common issues".
 
 ### 3. Introduction
 - 1-2 short paragraphs. Structure with clear layers, not a flat list of features:
@@ -533,13 +548,7 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
    - Model name acquisition flow uses the Launchpad page; endpoint URL acquisition uses Settings > Shared entrances
    - **Frontmatter includes `app_version`, `doc_version`, `doc_updated`, and `head` keywords** (CRITICAL for new docs)
 
-6. **Create remaining deliverables (REQUIRED, not optional)** - The English markdown file is only one of four required outputs. You MUST also create the Chinese stub and update both sidebar configs. Skipping this step makes the use case invisible on the docs site.
-
-   **`docs/zh/use-cases/<app>.md`** (REQUIRED) - Create the Chinese version using `@include` to reuse the English content:
-   ```markdown
-   <!--@include: ../../use-cases/<app>.md-->
-   ```
-   This is a single line. The Chinese file inherits the full English doc including frontmatter.
+6. **Create required English deliverables (REQUIRED, not optional)** - The English markdown file is only one of three required outputs. You MUST also update the English sidebar and the gallery data file. Skipping this step makes the use case invisible on the docs site.
 
    **`docs/.vitepress/usecase.en.ts`** (REQUIRED) - Add to English sidebar navigation:
    - Each category is a **top-level section** (not nested under "Use cases")
@@ -554,19 +563,38 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
    3. **Remaining AI apps in alphabetical order** (ACE-Step → AnythingLLM → Bifrost → Claude Code → ...)
    Place new AI use cases in the correct alphabetical position within group 3, or in group 1/2 if the app clearly belongs there.
 
-   **`docs/.vitepress/usecase.zh.ts`** (REQUIRED) - Add to Chinese sidebar navigation with the same placement. Use the app name as-is (most app names are not translated). Link prefix is `/zh/use-cases/`.
+   **`docs/.vitepress/data/useCases.ts`** (REQUIRED) - Add an entry to the `useCases` array so the app appears in the filterable gallery on the Use cases index page (`docs/use-cases/index.md`). The index page renders this array via the `UseCaseGallery` component; it does not list individual use cases itself, so a missing entry means the app is absent from the index. The gallery is locale-aware (it reads `lang` from VitePress and switches between English and Chinese), so each entry can carry both languages.
+   - Entry format: `{ title: "<App name>", link: "/use-cases/<app>", category: "<Category>", description: "<short EN one-liner>", descriptionZh: "<short ZH one-liner>" },`
+   - `title` (required): the app name as shown in the sidebar (e.g., `OpenClaw`, `Open WebUI`). Most app names are not translated, so `titleZh` is usually unnecessary. Add the optional `titleZh` only when the app has a real Chinese name (e.g., a built-in app like `文件管理器`).
+   - `link` (required): the site-absolute path `/use-cases/<app>` (no `.md`, no leading `./`).
+   - `category` (required): must match one of the categories in the `useCaseCategories` array exactly (`AI agent`, `AI workbench`, `Creative media`, `Model services`, `Embodied AI`, `Virtual machine`, `Entertainment`, `Productivity`, `Developer tools`, `Utilities`). Place the entry inside that category's block in the array. `category` is the canonical English key; do NOT translate it here. The gallery localizes pill labels via the separate `categoryLabelsZh` map. If the use case needs a brand-new category, add it to BOTH `useCaseCategories` (English order) and `categoryLabelsZh` (Chinese label) before using it.
+   - `description` (required): a short, punchy English gallery blurb (about 5-12 words), no trailing period. This is NOT the long SEO `description` from the page frontmatter. Write a concise one-liner.
+   - `descriptionZh` (recommended): the Chinese gallery blurb, no trailing period. If omitted, the gallery falls back to the English `description` on the Chinese site, so add it whenever you have the Chinese copy.
+   - When **deleting** a use case, remove its entry from this array too, or it will leave a dead card.
 
-   **`docs/use-cases/index.md`** (CONDITIONAL) - Add to "Featured use cases" section only if it's one of the core/essential guides (currently: ComfyUI, OpenClaw, Windows, Steam). Otherwise, it will only appear in the sidebar navigation.
+7. **Create Chinese deliverables only when English is finalized** - After the English deliverables are complete, you MUST ask the user explicitly before creating anything Chinese, unless the user has already stated that the English version is finalized and told you to proceed with Chinese.
 
-7. **Verify all deliverables exist** - Before reporting completion, confirm that all four required files have been created or updated:
+   Default question to ask:
+   > English use case created. Is the English version finalized? If yes, do you want me to (a) create a one-line Chinese `@include` stub, or (b) translate it into full Chinese content?
+
+   - **If the user says English is NOT finalized or does not respond clearly**, skip this step. Tell the user: "English use case created. Chinese stub and navigation will be added after the English version is finalized."
+   - **If the user confirms English is finalized and only wants an `@include` stub**, create:
+     - `docs/zh/use-cases/<app>.md` with the single line `<!--@include: ../../use-cases/<app>.md-->`
+     - Matching entry in `docs/.vitepress/usecase.zh.ts`
+   - **If the user confirms English is finalized and wants a full Chinese translation** (for SEO), translate the English content into Chinese and overwrite the stub. Add the current AI-translation warning callout at the top. Then update `docs/.vitepress/usecase.zh.ts`.
+
+   Do not create a Chinese `@include` stub for an English page that is still being rewritten, because the Chinese URL would display duplicate English content and hurt SEO. Do not silently create the Chinese stub without confirmation.
+
+8. **Verify all deliverables exist** - Before reporting completion, confirm that the required files have been created or updated:
    - [ ] `docs/use-cases/<app>.md` exists
-   - [ ] `docs/zh/use-cases/<app>.md` exists with the one-line `@include`
    - [ ] `docs/.vitepress/usecase.en.ts` contains the new entry
-   - [ ] `docs/.vitepress/usecase.zh.ts` contains the new entry
+   - [ ] `docs/.vitepress/data/useCases.ts` contains the new gallery entry
+   - [ ] (If English finalized) `docs/zh/use-cases/<app>.md` exists
+   - [ ] (If English finalized) `docs/.vitepress/usecase.zh.ts` contains the new entry
 
-   If any file is missing, the task is incomplete. Do not tell the user the use case is ready until all four are in place.
+   If any required file is missing, the task is incomplete. Do not tell the user the use case is ready until all required items are in place.
 
-8. **Output** - Provide a short summary listing the four files you created or modified, so the user can spot-check.
+9. **Output** - Provide a short summary listing the files you created or modified, and note whether the Chinese deliverables were skipped pending English finalization.
 
 ## Example Transformation
 
