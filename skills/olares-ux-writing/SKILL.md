@@ -700,11 +700,12 @@ Write source English so it translates cleanly.
 
 - Preserve placeholders exactly: spelling, casing, braces, order.
 - **Don't use `(s)` for plurals.** Use abbreviations (`{minutes} min`), move the variable to the end (`Files uploaded: {count}`), or use your i18n framework's plural rules.
-- **Use ICU plural syntax for count-dependent strings.** This is the standard for localization and is required for languages with complex plural rules (Russian, Polish, Arabic, etc.).
-  - ✅ `{count, plural, =1 {1 file selected} other {# files selected}}`
-  - ✅ `{count, plural, =0 {No files} =1 {1 file} other {# files}}`
+- **Use the framework's plural rules for count-dependent strings.** Olares uses vue-i18n pluralization (pipe syntax), not ICU MessageFormat. List each plural form separated by `|`, and let the framework pick the form by count.
+  - ✅ `'1 file selected | {count} files selected'` (singular | plural)
+  - ✅ `'No files | 1 file | {count} files'` (zero | singular | plural)
   - ❌ `{count} file(s)`
-  - ❌ `'0 item | 1 item | {count} items'` (pipe syntax hard-codes English plural rules and doesn't scale to other languages)
+  - ❌ `{count, plural, =1 {1 file selected} other {# files selected}}` (ICU MessageFormat is not supported)
+  - For languages with complex plural rules (Russian, Polish, Arabic, etc.), register a per-locale pluralization rule in vue-i18n rather than hardcoding forms. Don't assume the English singular/plural split applies.
 - **In English, 0 takes the plural form.** `0 files`, `0 items selected`, `0 minutes ago`.
   - ✅ `count_items_selected: '0 items selected | 1 item selected | {count} items selected'`
   - ❌ `count_items_selected: '0 item selected | 1 item selected | {count} items selected'`
@@ -713,8 +714,8 @@ Write source English so it translates cleanly.
   - ❌ `count > 1 ? t('files.items') : t('files.item')`
 - **Chinese has no grammatical number.** In zh-CN, a single form with `{count}` usually works for 0, 1, and many.
   - ✅ `已选择 {count} 个文件`
-  - No need for ICU plural in Chinese unless the surrounding product convention requires it.
-- **Check that the call site passes the count variable.** ICU plural and pipe syntax both need `count` (or the locale-specific plural variable) in the interpolation object. A missing `count` silently renders the literal placeholder or falls back to the wrong form.
+  - No need for plural forms in Chinese unless the surrounding product convention requires it.
+- **Check that the call site passes the count variable.** vue-i18n pluralization needs the count passed to the translation call (e.g. `t('files.count', count)`). A missing count silently renders the literal placeholder or falls back to the wrong form.
 
 ### Text Expansion Reference
 
