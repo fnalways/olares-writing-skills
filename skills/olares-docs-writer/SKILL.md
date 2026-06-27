@@ -95,6 +95,19 @@ Problem-solution guides for diagnosing and resolving issues. Use a problem-focus
 
 For the full template, section guidelines, complex diagnostic step structure, and platform-specific patterns (macOS / Windows), see `references/document-types/troubleshooting.md`.
 
+## H1 title guidelines
+
+Each page's H1 (`#`) is used as the page title in search results, so it must be unique across the site. Duplicate H1 titles (e.g., several pages all titled "Common issues" or "Known issues") hurt SEO and confuse readers.
+
+- **Make every H1 unique and specific.** Add the app name, product area, or scenario that scopes the page. Prefer "Open WebUI common issues" over "Common issues", "Olares One known issues" over "Known issues".
+- **Check for duplicates before finalizing** a new or renamed page. List existing duplicate H1s with:
+  ```bash
+  find docs -type f -name '*.md' -not -path '*/node_modules/*' | xargs grep -h '^# ' | sort | uniq -d
+  ```
+- **English/Chinese pairs are expected.** When the Chinese page reuses the English content via `@include`, or is a direct translation, the same H1 in `docs/` and `docs/zh/` is fine. Only same-language collisions need fixing.
+- **CLI command reference pages** named after the command itself (e.g., `` `install` ``, `` `backup` ``) are an accepted exception, since the command name is the H1.
+- When you rename an H1, the change is local to that line. Cross-references in other docs use file paths and link text, so they are not affected. Do not edit link text to match unless the link text is now misleading.
+
 ## Writing Style
 
 ### English Style
