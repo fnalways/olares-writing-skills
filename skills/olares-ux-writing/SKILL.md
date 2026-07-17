@@ -2,7 +2,7 @@
 name: olares-ux-writing
 description: Review and write bilingual (English/Chinese) UX copy for Olares products. Covers UI labels, error messages, notifications, empty states, confirmation dialogs, and onboarding. Enforces Olares-specific style, terminology, punctuation, accessibility, and localization rules. Use when editing or creating interface strings, reviewing i18n keys, or auditing product copy for consistency. For long-form documentation, see olares-docs-writer. For Chinese-to-English use case tutorials, see use-case-writer.
 metadata:
-  version: 0.1.4
+  version: 0.1.5
 ---
 
 # Olares UX Writing
@@ -120,6 +120,10 @@ Use this workflow when reviewing changed i18n files or editing localized UI copy
   - If the placeholder renders as a user-provided name, prefer Chinese quotation marks in zh copy instead of code-side quotes (`删除知识库“{base}”？`).
   - Always inspect the call site before changing placeholder spacing. Do not blanket-remove spaces around `{...}` in Chinese.
   - Lint checks for Chinese placeholder spacing should report suspicious cases with allowlists or annotations, not auto-fix them.
+- For spacing around embedded Latin text (brand names, product terms, English words) inside CJK copy, the convention differs by language and must not be carried over between them:
+  - zh-CN keeps a half-width space between Chinese characters and adjacent Latin text (`与 Olares 系统`, `连接到 Olares`, `已找到 Olares ID`).
+  - ja-JP does not add a space between Japanese characters and adjacent Latin text (`Olaresに接続できません`, `唯一無二のOlares IDを作成`). Only keep a space between two Latin words (`Olares ID`).
+  - Before adding or editing a brand mention in ja-JP, check nearby strings in the same file for the no-space convention rather than assuming the zh-CN spacing habit applies.
 - For Chinese parentheses, follow GB/T 15834-2011: use half-width `()` when the content inside is entirely Western letters, digits, units, or symbols (`磁盘用量 (GiB)`, `温度 (°C)`, `网络流量 (Mbps)`, `占比 (%)`). Use full-width `（）` only when the content contains Chinese characters (`备注（仅限管理员）`, `集群（K8s 节点）`). Do not blanket-apply full-width brackets in zh just because the surrounding text is Chinese.
 - For Chinese quotation marks, use the same content-based rule as parentheses: when the quoted text is entirely Western letters, digits, or symbols, use curly double quotation marks with a half-width space on each side (`输入 "admin" 以继续`). When the quoted text contains Chinese characters, use full-width curly double quotation marks with no extra spaces (`显示"连接失败"错误`).
 - For ellipsis in ongoing operations or more-options text, both English and Chinese use the single horizontal ellipsis character `…` (U+2026) (`Loading…`, `加载中…`), following the Apple Human Interface Guidelines. Do not use three ASCII periods (`...`). Note that the ASCII `...` may still appear in an English i18n **key** (for example `'Loading...': 'Loading…'`); keep the key as-is and only fix the displayed **value**.

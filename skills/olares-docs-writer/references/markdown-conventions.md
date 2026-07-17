@@ -6,14 +6,22 @@ VitePress-specific Markdown patterns for Olares docs.
 
 ```yaml
 ---
-outline: [2, 3]           # Table of contents depth
-description: "..."        # SEO description (required)
-head:                     # Optional meta tags
+title: Short title override   # Optional; ONLY when the H1 is too long. Omit it otherwise — the H1 is used automatically
+outline: [2, 3]               # Table of contents depth
+description: ...              # SEO description (required, unique, under 160 characters)
+noindex: true                 # Optional; keep this page out of search engines (fragments, outdated, orphans)
+head:                         # Optional meta tags
   - - meta
     - name: keywords
-      content: "Olares, ..."
+      content: Olares, ...
 ---
 ```
+
+Notes:
+- `title` overrides only the `<title>` tag, not the visible H1. Add it **only** when the H1 is too long; otherwise omit it and the H1 is used automatically.
+- `search: false` removes a page from on-site search only; it does **not** deindex it from Google. Use `noindex: true` for that.
+- Quote a `description`/`content` value only when it contains YAML-special characters (a colon-space, or a leading `>`, `|`, `#`, `&`, `*`, `[`, `{`, `"`, `'`).
+- See the "SEO metadata guidelines" section in `SKILL.md` for full guidance.
 
 ## Headings
 

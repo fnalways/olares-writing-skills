@@ -2,7 +2,7 @@
 name: olares-docs-writer
 description: Write Olares documentation in English and Chinese for the VitePress docs site. Use when the user wants to create or edit manuals, developer docs, troubleshooting guides, FAQ entries, or translations between English and Chinese, and when they mention `docs.olares.com`, `docs/manual/`, `docs/developer/`, or `docs/manual/help/`. Enforces the Olares style guide and VitePress conventions. For Chinese-to-English use case tutorials, use use-case-writer instead. For UI strings and product copy, see olares-ux-writing.
 metadata:
-  version: 0.1.0
+  version: 0.2.0
 ---
 
 # Olares Documentation Writer
@@ -108,6 +108,70 @@ Each page's H1 (`#`) is used as the page title in search results, so it must be 
 - **CLI command reference pages** named after the command itself (e.g., `` `install` ``, `` `backup` ``) are an accepted exception, since the command name is the H1.
 - When you rename an H1, the change is local to that line. Cross-references in other docs use file paths and link text, so they are not affected. Do not edit link text to match unless the link text is now misleading.
 
+## SEO metadata guidelines
+
+Every page ships three search-facing fields: the `<title>` tag, the meta `description`, and optional `keywords`. Set them deliberately for every new or edited page, in **both** languages.
+
+### The `<title>` tag and over-long H1s
+
+VitePress builds the `<title>` tag from the frontmatter `title` if present, otherwise from the first H1.
+
+- **Default to the H1.** When the H1 already works as the title, do **not** add a `title` field — VitePress uses the H1 automatically. Don't add a redundant `title` that just repeats the H1.
+- **Only override an over-long H1.** If the H1 has to stay long or descriptive for on-page clarity, add a shorter `title` in frontmatter (aim for ~60 chars) to override **only** the `<title>` tag — the visible H1 is unchanged:
+  ```yaml
+  ---
+  title: Manage accelerator resources        # only because the H1 below is long
+  description: ...
+  ---
+  # Manage GPU, integrated accelerators, and CPU fallback on Olares
+  ```
+- Keep titles **unique** within a language (see H1 title guidelines). Two pages with the same `<title>` compete against each other in search.
+
+### Meta description
+
+- **Required and unique** on every page. Duplicate descriptions hurt SEO the same way duplicate titles do.
+- Length: **keep under 160 characters** (both languages). Front-load the key info — the tail gets truncated in results.
+- Write a real sentence that summarizes the page and earns the click. Don't keyword-stuff.
+- This is the right home for positioning/brand terms that don't belong in the H1 (e.g., "self-hosted", "Google Photos alternative").
+- YAML quoting: only quote the value when it contains a YAML-special sequence — a colon-followed-by-space, or a leading `>`, `|`, `#`, `&`, `*`, `[`, `{`, `"`, `'`. Plain prose needs no quotes.
+
+### Keywords
+
+Optional, via a `head` block. Use a short, comma-separated set, and put competitor/alternative and long-tail terms here instead of forcing them into the H1:
+```yaml
+head:
+  - - meta
+    - name: keywords
+      content: Olares, self-hosted photos, Immich, Google Photos alternative
+```
+
+### Keep H1s natural — push positioning terms to metadata
+
+Do **not** stuff "Olares" or "X alternative" into the H1 just for keywords. Write the H1 for the reader and move those terms to `description`/`keywords`:
+- ❌ `# Self-host your photos with Immich (Google Photos alternative)`
+- ✅ `# Manage photos with Immich` — with "self-hosted" / "Google Photos alternative" carried in `description` and `keywords`.
+
+### `noindex` vs. `search: false`
+
+- `search: false` only removes a page from the **on-site** search box. It does **not** stop Google/Bing from indexing it.
+- To keep a page out of search engines, add `noindex: true` (emits `<meta name="robots" content="noindex, nofollow">`).
+- Apply `noindex: true` to: `@include`-only fragment pages, outdated/superseded pages kept only for reference, and low-value pages not linked from any sidebar nav. `noindex` is reversible — remove it later to let the page be indexed again.
+- Keep EN and ZH in sync: if you `noindex` a page, do the same for its counterpart.
+
+### Renaming or retiring a page (redirects)
+
+`docs/.vitepress/theme/redirects.ts` is the single source of truth for redirects.
+- **Renaming a slug** (for a clearer or brand URL): add a permanent 301 from the old path to the new one (EN **and** ZH), update every internal link and the sidebar nav configs, then regenerate the edge config:
+  ```bash
+  SYNC_NGINX_REDIRECTS=1 node docs/.vitepress/scripts/sync-redirects.mjs
+  ```
+- **Retiring a page**: add a 301 to its closest live replacement, **delete the source `.md`** (don't leave a page that both builds and 301s), and remove or repoint any inbound links and nav entries. Pick a real, indexable redirect target — not a page that is itself `noindex` or an `@include` fragment.
+- Redirect *source* paths are auto-excluded from `sitemap.xml`, so a renamed/retired URL won't show up as a redirecting sitemap entry.
+
+### Example emails are rewritten by Cloudflare
+
+Example addresses like `alice@olares.com` in a page are rewritten by Cloudflare Email Address Obfuscation into `/cdn-cgi/l/email-protection` links, which crawlers report as "broken." This is fixed at the Cloudflare layer (disable Email Obfuscation for `/docs/*`), not in the markdown — so realistic example IDs are fine. Just don't publish a real, monitored inbox as plain text unless that's intended.
+
 ## Writing Style
 
 ### English Style
@@ -156,6 +220,16 @@ Each page's H1 (`#`) is used as the page title in search results, so it must be 
 - **Sentence structure**: Shorter sentences than English
 - **Headings**: Concise, often shorter than English equivalent
 - **Steps**: Direct instructions ("点击", "输入", "选择")
+
+#### Write Chinese that sounds natural
+
+Chinese docs must read like they were written in Chinese, not translated from English. The English and Chinese versions are parallel deliverables: write each one in its own language and rhythm.
+
+- **Do not write English first and then translate sentence by sentence.** If the source is English, re-express the meaning in natural Chinese. If the source is Chinese, re-express it in natural English.
+- **Read every Chinese sentence aloud.** If it feels awkward or textbook-like, rewrite it the way you would explain it to a colleague.
+- **Lead with verbs, not noun phrases.** Descriptions of skills, features, or steps should start with what the user can do.
+- **Remove bureaucratic, manual-style, or machine-translated filler.** Avoid vague words such as "进行", "相关", "对应", "相应", "比较", and empty phrases such as "...即可", "...的做法" unless they genuinely help clarity.
+- **Explain technical terms the first time they appear.** Use backticks for the term and plain Chinese for the meaning, e.g. "选择范围：`global`（全局）或 `project`（项目级）".
 
 ## Error-Prevention Design
 
@@ -372,18 +446,19 @@ File location: `/docs/one/` (English) and `/docs/zh/one/` (Chinese)
 
 ## Best Practices
 
-1. **Always include a description** in frontmatter for SEO
-2. **Use outline to control TOC depth** — `[2, 3]` for most pages
-3. **Add screenshots for UI steps** — use `#bordered` class
-4. **Include alt text** for accessibility
-5. **Test all links** before submitting
-6. **Keep sentences short** — easier to read and translate
-7. **Use active voice** — clearer and more direct
-8. **Be consistent** with terminology across pages
-9. **Use correct domains** — .com for English, .cn for Chinese
-10. **Check for specialized skills** — `use-case-writer` for use cases, `olares-ux-writing` for UI copy
-11. **Surface hard constraints before learning objectives** — If a tutorial requires a specific starting state, announce it in a `:::warning` at the top. Don't rely on Prerequisites alone.
-12. **Add verification hints after critical steps** — Tell users how to confirm they succeeded before moving on.
+1. **Always include a unique description** in frontmatter, under 160 characters
+2. **Only override a long H1 with a frontmatter `title`** — otherwise omit it and let the H1 be the title
+3. **Use outline to control TOC depth** — `[2, 3]` for most pages
+4. **Add screenshots for UI steps** — use `#bordered` class
+5. **Include alt text** for accessibility
+6. **Test all links** before submitting
+7. **Keep sentences short** — easier to read and translate
+8. **Use active voice** — clearer and more direct
+9. **Be consistent** with terminology across pages
+10. **Use correct domains** — .com for English, .cn for Chinese
+11. **Check for specialized skills** — `use-case-writer` for use cases, `olares-ux-writing` for UI copy
+12. **Surface hard constraints before learning objectives** — If a tutorial requires a specific starting state, announce it in a `:::warning` at the top. Don't rely on Prerequisites alone.
+13. **Add verification hints after critical steps** — Tell users how to confirm they succeeded before moving on.
 
 ## References
 
