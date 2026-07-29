@@ -97,6 +97,14 @@ Include in `head.meta.content`:
 - Category (e.g., `AI`, `automation`, `game streaming`)
 - Key features (e.g., `self-hosted`, `workflow`, `image generation`)
 
+**Content length: quality over arbitrary thresholds**
+
+Do not pad text, add filler sections, or inflate descriptions just because an SEO plugin flags a page as "too short." Use case length should be determined by the workflow's actual complexity and what the user needs to succeed.
+
+- A simple single-app guide should stay short.
+- A complex multi-app workflow deserves the space it needs.
+- If a plugin reports thin content, first check whether steps are missing or unclear — not whether the word count is high enough.
+
 ### 2. Title (H1)
 - Use action-oriented titles (start with a verb)
 - Examples: "Deploy Stable Diffusion for AI image generation", "Stream games from your Olares device"

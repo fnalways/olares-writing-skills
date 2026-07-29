@@ -145,6 +145,14 @@ head:
       content: Olares, self-hosted photos, Immich, Google Photos alternative
 ```
 
+### Content length: quality over arbitrary thresholds
+
+Do not pad text, add filler sections, or inflate descriptions just because an SEO plugin flags a page as "too short." Documentation length should be determined by the topic's actual complexity and what the user needs to succeed.
+
+- A simple one-step guide should stay short.
+- A complex multi-app workflow deserves the space it needs.
+- If a plugin reports thin content, first check whether steps are missing or unclear — not whether the word count is high enough.
+
 ### Keep H1s natural — push positioning terms to metadata
 
 Do **not** stuff "Olares" or "X alternative" into the H1 just for keywords. Write the H1 for the reader and move those terms to `description`/`keywords`:
