@@ -2,6 +2,15 @@
 
 Plugin-level changelog. Per-skill changes show up in the SKILL.md `metadata.version` field.
 
+## v0.4.0 — 2026-09-06
+
+- Add `olares-customer-service` v0.1.0:
+  - Research current official Olares documentation, Known Issues, Release Notes, and traceable engineering confirmation before making technical claims.
+  - Draft and review customer replies with explicit verification, failure branches, source attribution, and content-gap reporting.
+  - Apply risk-aware escalation for data loss, reinstall, firmware/BIOS, hardware, security, privacy, account recovery, licensing, refund, and warranty cases.
+  - Treat historical ticket replies as directional evidence rather than a trusted answer corpus.
+- Update the root `olares-writing-skills` skill to v0.2.0 and expose the new skill through the plugin marketplace.
+
 ## v0.3.0 — 2026-07-16
 
 - `olares-docs-writer` v0.2.0:

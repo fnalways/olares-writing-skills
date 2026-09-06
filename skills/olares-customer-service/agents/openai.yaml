@@ -1,0 +1,4 @@
+interface:
+  display_name: "Olares Customer Service"
+  short_description: "检索官方资料并起草安全、准确、可执行的 Olares 客服回复"
+  default_prompt: "Use $olares-customer-service to research this Olares ticket and draft a safe, accurate reply."
