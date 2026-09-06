@@ -5,20 +5,21 @@
     "url": "https://github.com/fnalways"
   },
   "metadata": {
-    "description": "Writing skills for Olares contributors: documentation, use cases, and UX copy",
-    "version": "0.2.0",
+    "description": "Writing and customer-support skills for Olares contributors: documentation, use cases, UX copy, and evidence-backed support replies",
+    "version": "0.4.0",
     "repository": "https://github.com/fnalways/olares-writing-skills"
   },
   "plugins": [
     {
       "name": "olares-writing-skills",
-      "description": "Writing skills for Olares contributors. Includes Olares documentation writer (VitePress, multiple doc types), use case tutorial writer (Chinese-to-English Olares use cases), bilingual UX copy reviewer, and module i18n audit workflow.",
+      "description": "Writing and customer-support skills for Olares contributors. Includes Olares documentation writer, use case tutorial writer, bilingual UX copy reviewer, module i18n audit workflow, and evidence-backed customer-support reply review.",
       "source": "./",
       "skills": [
         "./skills/olares-docs-writer",
         "./skills/use-case-writer",
         "./skills/olares-ux-writing",
-        "./skills/olares-i18n-audit"
+        "./skills/olares-i18n-audit",
+        "./skills/olares-customer-service"
       ]
     }
   ]

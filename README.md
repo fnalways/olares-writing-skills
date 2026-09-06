@@ -1,6 +1,6 @@
 # Olares Writing Skills
 
-Writing skills for [Olares](https://olares.com) contributors. Drop these into your AI coding agent so it can help draft Olares documentation, use case tutorials, and UX copy in the established Olares style.
+Writing and customer-support skills for [Olares](https://olares.com) contributors. Drop these into your AI coding agent so it can help draft Olares documentation, use case tutorials, UX copy, and evidence-backed customer replies in the established Olares style.
 
 Built for Claude Code, OpenAI Codex, Cursor, Windsurf, and any agent that supports the [Agent Skills spec](https://agentskills.io).
 
@@ -11,6 +11,7 @@ Built for Claude Code, OpenAI Codex, Cursor, Windsurf, and any agent that suppor
 | `olares-docs-writer` | Write Olares documentation in VitePress format (use cases, manuals, developer docs, troubleshooting). Bilingual EN/ZH. |
 | `use-case-writer` | Transform Chinese drafts into polished English use case tutorials for `docs.olares.com`. |
 | `olares-ux-writing` | Review and write bilingual UI copy (labels, errors, dialogs, onboarding) following Olares-specific style and terminology. |
+| `olares-customer-service` | Research, triage, draft, and review Olares support replies using current official evidence and risk-aware escalation rules. |
 
 ## Installation
 
@@ -74,6 +75,7 @@ Once installed, just ask your agent to help with Olares writing tasks:
 - "Translate this Chinese draft into an Olares use case"
 - "Review these UI strings against Olares UX writing guidelines"
 - "Write a troubleshooting guide for VPN connection issues"
+- "Research this Olares ticket and draft a safe customer reply"
 
 The agent picks the right skill based on the trigger phrases in your request.
 
