@@ -15,6 +15,8 @@ Require human or responsible-team review for:
 
 The draft may acknowledge the issue and collect safe minimum context, but it must not make a policy decision or provide an unverified destructive workaround.
 
+For disassembly, firmware/BIOS, reset, reinstall, format, migration, or destructive recovery, the first reply must confirm that the source's applicability conditions match the customer's case before reproducing the full procedure. Until they match, give only the safe discriminating check and documented support route. A procedure being official does not make it applicable to every similar symptom.
+
 ## Destructive operations
 
 Before recommending deletion, uninstall with data removal, reset, reinstall, format, firmware/BIOS changes, or migration:
@@ -40,10 +42,13 @@ Do not request or expose passwords, API keys, session cookies, private keys, rec
 
 Do not invent a private upload destination. If no approved secure channel is available, escalate internally and tell the customer that secure submission instructions will follow.
 
+Before returning the reply, scan it for requests for logs, screenshots, IDs, environment values, or archives. Every such request must include what to redact and either a documented private route or an explicit statement that secure submission instructions will follow.
+
 ## Commitments and ticket state
 
 - A fix claim needs a source, a version, and a verification step.
 - An ETA needs a tracked item and an accountable owner. Otherwise say no confirmed date is available.
 - A handoff should name the responsible function when known and specify the event that will trigger the next update; do not invent a person or deadline.
+- Name an owner or team only when an inspected source documents it. Otherwise use `Internal triage required to identify the responsible owner` rather than inventing a plausible internal function.
 - Do not recommend closing a ticket until an external conclusion exists and the resolution or next ownership is recorded.
 - Suggested statuses are recommendations only; changing state requires explicit authorization.

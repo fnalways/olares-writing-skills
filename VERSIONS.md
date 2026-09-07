@@ -2,6 +2,14 @@
 
 Plugin-level changelog. Per-skill changes show up in the SKILL.md `metadata.version` field.
 
+## Skill update — 2026-09-07
+
+- `olares-customer-service` v0.1.1:
+  - Add eight reusable blind-evaluation cases and a scored evaluation record.
+  - Require an applicability gate before reproducing high-risk disassembly, BIOS/firmware, reset, reinstall, format, migration, or destructive-recovery procedures.
+  - Add a final privacy preflight for logs, screenshots, IDs, environment values, and archives.
+  - Prevent invented internal owner/team names and allow compact output for simple, single-source cases.
+
 ## v0.4.0 — 2026-09-06
 
 - Add `olares-customer-service` v0.1.0:

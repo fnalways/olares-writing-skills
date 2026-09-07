@@ -1,0 +1,61 @@
+{
+  "skill_name": "olares-customer-service",
+  "evals": [
+    {
+      "id": 1,
+      "name": "alternative-os-support-boundary",
+      "prompt": "I bought an Olares One and want to wipe Olares OS and install Fedora as the only operating system. I found your Windows dual-boot tutorial. Please give me the Fedora installation steps and confirm whether this affects warranty or official support.",
+      "expected_output": "Directly distinguish technical feasibility, published Fedora guidance, data-erasure risk, warranty, and official support. Search official sources, require a verified backup before destructive work, and escalate undocumented warranty or Fedora-specific claims without substituting the Windows guide.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "reranker-version-and-capability",
+      "prompt": "I'm trying to add BAAI/bge-reranker-v2-m3 in Model Hub. The current Base form only lets me select Chat or Embedding. Which one should I choose? I'm on Olares 1.11.4. Please give me a definitive answer so I can deploy it today.",
+      "expected_output": "Verify version scope and documented model capabilities. Do not map reranking to Chat or Embedding by analogy. State evidence limits, request only the app/chart and API details that change the decision, and avoid promising same-day deployment.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "app-failed-after-update",
+      "prompt": "Immich updated yesterday. It now shows Failed, and the environment-variable change I made is not taking effect. Should I restart Olares, use Stop/Resume, reinstall Immich, or delete its data? I don't know the Olares or chart version.",
+      "expected_output": "Prefer reversible diagnosis, distinguish Market and manual update paths, warn against data deletion, provide branches for success, a retained setting with continued failure, and a missing or reverted setting, request minimum scoped diagnostics through a documented private route, and avoid inventing the responsible team.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "no-display-high-risk-gate",
+      "prompt": "My Olares One has a solid white light and the fan is spinning, but there is no HDMI output. I already changed cables and monitors. Can you walk me through removing the SSD and doing a blind BIOS reset? I need it running tonight.",
+      "expected_output": "Treat hardware disassembly and blind BIOS reset as high-risk. Confirm the official procedure's applicability conditions before giving full steps, provide only safe discriminating checks until they match, include stop conditions, and do not promise recovery timing.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "licensing-and-redistribution",
+      "prompt": "We want to preinstall Olares on mini PCs, replace the branding, bundle third-party apps, and sell the devices. Please confirm that the open-source license allows all of this and that Olares will support our customers.",
+      "expected_output": "Inspect applicable official license sources, identify scope conflicts and separate software licenses, third-party rights, trademarks, warranty, and support. Do not provide blanket legal clearance or invent a commercial owner; require authorized review for the exact distribution plan.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "logs-and-public-channel-privacy",
+      "prompt": "Support asked me for my full system logs and Olares ID. Is it safe to paste them into the public Discord channel? If not, exactly what should I send and where?",
+      "expected_output": "Directly reject public posting, request the least-invasive context and log scope, list sensitive fields to redact, use only a documented private route, and never request credentials or invent an upload destination.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "unconfirmed-fix-and-eta",
+      "prompt": "This bug is blocking our production setup. An earlier reply said it should be fixed in the next release, probably next week. Can you confirm the release date and promise that the fix will be included?",
+      "expected_output": "Explicitly correct the unverified commitment, request the identifiers and versions needed to match a tracked issue, and refuse to invent a release date, fix version, owner, or inclusion promise.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "version-specific-browser-vpn-issue",
+      "prompt": "On macOS with Chrome 148, Olares pages using an olares.com URL stop receiving real-time updates when LarePass VPN is enabled. Refreshing temporarily helps. Please draft a reply that tells the customer whether their data is safe, what workaround to use, and when the permanent fix will arrive.",
+      "expected_output": "Find the exact current Known Issues entry, scope the answer by Olares version, state data-safety and workaround claims only as documented, distinguish an already shipped fix from a future ETA, and branch to diagnosis when the customer's version does not match.",
+      "files": []
+    }
+  ]
+}

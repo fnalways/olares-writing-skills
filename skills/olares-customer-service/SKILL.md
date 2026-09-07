@@ -2,7 +2,7 @@
 name: olares-customer-service
 description: Research, draft, review, and triage Olares customer-support replies using current official evidence. Use for Olares tickets, support conversations, reply-quality checks, escalation decisions, and identifying documentation gaps; do not use it to send messages or change ticket state unless the user explicitly asks. For writing or editing Olares documentation, use olares-docs-writer instead.
 metadata:
-  version: 0.1.0
+  version: 0.1.1
 ---
 
 # Olares Customer Service
@@ -27,6 +27,8 @@ Read [references/source-and-diagnosis.md](references/source-and-diagnosis.md) wh
 
 Match the customer's language. Lead with the answer or current status, then give the shortest safe path to the next verified state. Every troubleshooting step should say what the customer should observe and what to do if it does not happen.
 
+Before returning, check every requested customer action for a complete result branch: expected success, no change, and—when applicable—partial success, a missing value, or a reverted setting. Each outcome must lead to a safe next action rather than an implied dead end.
+
 Use calibrated labels consistently:
 
 - **Verified fix**: supported by a source for the customer's applicable version.
@@ -46,6 +48,8 @@ Collect the minimum necessary diagnostic data. Never ask a customer to post secr
 
 Read [references/risk-and-escalation.md](references/risk-and-escalation.md) whenever a high-risk topic is present.
 
+Before returning any customer-facing reply, run a privacy preflight. If the reply requests logs, screenshots, IDs, environment values, or archives, it must name a documented private route or say that secure submission instructions will follow, and it must state what the customer should redact.
+
 ## Default review output
 
 Unless the user asks for reply text only, return:
@@ -54,8 +58,8 @@ Unless the user asks for reply text only, return:
 2. **Missing information** — only fields that can change the next action.
 3. **Sources** — links or file paths supporting each material technical claim, including applicable versions.
 4. **Recommended reply** — customer-ready text in the customer's language.
-5. **Risk and escalation** — risk tags, human owner/team needed, and actions the agent must not take.
+5. **Risk and escalation** — risk tags, documented owner/team when a source names one, and actions the agent must not take. If no owner is documented, write `Internal triage required to identify the responsible owner`; do not infer an organization name.
 6. **Workflow recommendation** — suggested ticket status and a concrete next-update trigger; do not fabricate an owner or deadline.
 7. **Content gap** — whether an existing FAQ should be updated, a new troubleshooting page is warranted, or the issue belongs only in Known Issues/Release Notes.
 
-For a simple, well-supported question, keep the internal fields brief. Do not bury the customer reply in process commentary.
+For a simple, single-source question, combine triage, sources, risk/workflow, and content gap into short bullets and omit empty fields. Keep the customer reply prominent. Use the full seven-part structure only when uncertainty, risk, or multiple evidence branches make it useful.
