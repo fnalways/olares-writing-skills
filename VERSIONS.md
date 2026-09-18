@@ -2,6 +2,16 @@
 
 Plugin-level changelog. Per-skill changes show up in the SKILL.md `metadata.version` field.
 
+## v0.5.0 — 2026-09-18
+
+- `olares-writing-skills` v0.3.0:
+  - Update the use-case-writer routing summary to describe the bilingual English-first workflow.
+- `use-case-writer` v0.4.0:
+  - Replace the obsolete whole-page Chinese `@include` deliverable with a complete standalone Chinese translation after English finalization.
+  - Require localized Chinese frontmatter, the standard AI-translation warning, localized internal links, and the ZH sidebar entry.
+  - Remove the unnecessary choice between an `@include` stub and a full translation. Once English is confirmed final, the skill creates the complete Chinese deliverables automatically.
+  - Continue allowing localized reusable fragment includes when matching files exist under `docs/zh/reusables/`.
+
 ## Skill update — 2026-09-07
 
 - `olares-customer-service` v0.1.1:
