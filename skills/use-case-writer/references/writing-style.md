@@ -154,4 +154,3 @@ Single-model apps in Market often include a suffix such as `(Ollama)` in their d
 **Rule of thumb:**
 - If it's **filling in configuration values**, use an unordered list or field table
 - If it's **performing actions in sequence**, use `a. b. c.` (ordered sub-steps)
-
