@@ -1,53 +1,67 @@
 # Example transformation
 
-A sample showing how a Chinese input becomes a polished English use case.
+These excerpts illustrate editorial choices from QEMU Server and Pterodactyl documentation reviews. They are not complete deliverables or current product specifications. Verify app versions, UI labels, and settings before using them in a real guide.
 
-## Chinese input
+## From porting notes to a useful task
 
-> 我想写一个关于在 Olares 上安装使用 n8n 的教程。n8n 是一个工作流自动化工具，可以连接各种服务。版本是 1.2.3。需要先安装 Ollama，然后在 Market 安装 n8n，配置 webhook。
+Source notes:
 
-## English output
+> QEMU Server: four distributions covered in regression. Record machine ID and boot ID, resize CPU/RAM/disk, check marker-file persistence, test SSH and Clone isolation. Ubuntu uses ubuntu. Installation requires distribution, resources, and password. The Linux image initializes after app installation. Clone creates a fresh disk, not a copy. SSH and SFTP use the selected instance's connection details.
+
+Editorial decisions:
+- Use Ubuntu as the first server and Debian as the separate Clone example.
+- Keep initialization readiness, credential sources, per-instance connection details, and disk/Clone limits.
+- Put the test matrix, machine IDs, and coverage in the PR validation record.
+- Keep Learning objectives even if the reviewed historical page omitted them.
+
+Example English opening:
 
 ```markdown
----
-outline: deep
-description: Set up n8n on Olares for workflow automation. Connect services and build automated workflows while maintaining full data control.
-head:
-  - - meta
-    - name: keywords
-      content: Olares, n8n, workflow automation, self-hosted
-app_version: "1.2.3"
-doc_version: "1.0"
-doc_updated: "2025-03-10"
----
+# Run Linux servers with QEMU Server
 
-# Automate workflows with n8n
+QEMU Server runs Linux virtual machines on Olares. Use a server for command-line tools, development, or services, and manage it through SSH or a browser console.
 
-n8n is an open-source workflow automation tool that connects various services and applications through visual workflows. Running n8n on Olares ensures your automation data stays under your control.
+This guide uses Ubuntu as the first server and Debian as a separate instance.
 
 ## Learning objectives
 
 In this guide, you will learn how to:
-- Install and configure n8n on Olares
-- Set up webhook endpoints for external integrations
-- Create your first automated workflow
-
-## Prerequisites
-
-- [Ollama installed](ollama.md) and running for local AI model support
-- Olares admin privileges
-- Basic understanding of HTTP/webhook concepts
-
-## Install n8n
-
-1. Open Market and search for "n8n".
-2. Click **Get**, then **Install**, and wait for installation to complete.
-
-## Configure webhook access
-
-:::tip Enable external access
-For webhooks to receive events from external services, ensure LarePass VPN is enabled on your device.
-:::
-
-[Continue with specific steps...]
+- Install and initialize a Linux server.
+- Connect to the server and transfer files.
+- Create a separate server and adjust its resources.
 ```
+
+Natural Chinese counterpart:
+
+```markdown
+# 使用 QEMU Server 运行 Linux 服务器
+
+QEMU Server 可以在 Olares 上运行 Linux 虚拟机，用于运行命令行工具、搭建开发环境或托管服务。你可以通过 SSH 或浏览器控制台管理服务器。
+
+本文先创建一台 Ubuntu 服务器，再创建一个独立的 Debian 实例。
+
+## 学习目标
+
+通过本文，你将学会：
+- 安装并初始化 Linux 服务器。
+- 连接服务器并传输文件。
+- 创建独立服务器并调整资源。
+```
+
+The full guide still needs supported frontmatter, the actual steps, required navigation/gallery updates, and Chinese delivery according to the language workflow. Opening excerpts do not replace those deliverables.
+
+## Keep the check that determines the next action
+
+Test narration: record initialization time and verify guest startup across every supported distribution.
+
+Tutorial instruction: open the app to view Linux initialization progress, wait for the documented ready state, then connect using the chosen distribution's account. Show where to find that state. An installed app does not by itself mean its guest OS is ready.
+
+Do not invent a precise status label or typical duration from these notes.
+
+## Replace a test fixture with a routine task
+
+Test narration: run the Pterodactyl `playing` command once per minute, check the console response, then disable the test schedule.
+
+Tutorial task: schedule the supported `save` command every 30 minutes to save the world. Explain where to create the schedule and enter its fields. Distinguish saving the current world from creating a separate restorable backup.
+
+Use this task only when the app and game version support it. Do not imply that an editorial example has been executed or validates multiplayer capacity.

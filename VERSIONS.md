@@ -2,6 +2,28 @@
 
 Plugin-level changelog. Per-skill changes show up in the SKILL.md `metadata.version` field.
 
+## v0.6.0 — 2026-10-16
+
+- `use-case-writer` v0.6.0:
+  - Accept drafts, porting notes, test results, implementation context, and PRs as evidence for reader-task tutorials.
+  - Require Learning objectives in every English and Chinese use case, including short guides.
+  - Add evidence selection, useful examples, retained readiness checks, and boundaries for public acceptance pages.
+  - Search reusable text, canonical guides, and screenshots before drafting, with applicability and localized-region checks.
+  - Replace fixed installation steps and universal Launchpad model IDs with actual UI ordering and connection-specific sources.
+  - Make network layout protocol-aware and flexible, and remove guessed configuration/version fallbacks.
+  - Review after technical follow-ups and add engineering-input regression cases.
+- `olares-docs-writer` v0.3.0: route all app use cases to the dedicated skill and remove conflicting whole-page Chinese include and simultaneous-navigation rules.
+- `olares-writing-skills` v0.4.0: update routing and usage descriptions for engineering inputs.
+- Plugin v0.6.0 reflects the expanded authoring workflow. Existing English-first language delivery remains in place.
+
+## Skill update: 2026-10-13
+
+- `use-case-writer` v0.5.0:
+  - Allow range dashes while prohibiting dashes used to introduce explanations, add asides, or join clauses in authored prose.
+  - Prohibit English and Chinese prose semicolons while preserving required technical syntax and exact UI labels.
+  - Add task-oriented tutorial guidance to avoid test-report narration, fixed-answer assertions, repeated caveats, and irrelevant implementation details while retaining necessary success signals.
+  - Move detailed writing style guidance into a required reference and add punctuation and tutorial-voice checks to the review process.
+
 ## v0.5.0 — 2026-09-18
 
 - `olares-writing-skills` v0.3.0:

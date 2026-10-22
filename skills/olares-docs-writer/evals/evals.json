@@ -5,14 +5,14 @@
       "id": 1,
       "name": "english-use-case-tutorial",
       "prompt": "Write a use case tutorial for a new Olares app called 'Home Assistant' that helps users control smart home devices. The tutorial should cover: installation from Market, initial setup, adding a smart device (like a light bulb), and creating an automation. Write it in English following Olares documentation style.",
-      "expected_output": "A complete use case markdown file with proper frontmatter, learning objectives, prerequisites, step-by-step instructions with numbered lists, tips, and FAQ section. Should follow the Olares style with outline, description, bordered images placeholders, and material icons.",
+      "expected_output": "Route this app tutorial to use-case-writer regardless of source language. Follow its required Learning objectives, evidence checks, English deliverables, and navigation/gallery requirements. Do not impose the generic manual template.",
       "files": []
     },
     {
       "id": 2,
       "name": "chinese-use-case-tutorial",
       "prompt": "写一篇关于在 Olares 上部署 'Plex' 媒体服务器的使用案例教程。内容包括：从应用市场安装、配置媒体库、添加电影文件夹、以及如何在其他设备上观看。使用中文撰写，遵循 Olares 文档风格。",
-      "expected_output": "一份完整的中文 use case markdown 文件，包含正确的 frontmatter、学习目标、前置条件、步骤说明（使用有序列表）、提示框，以及常见问题部分。应该遵循 Olares 中文文档的简洁风格。",
+      "expected_output": "将应用教程路由到 use-case-writer，遵循用户明确要求的中文输出，提供完整中文内容和学习目标，不使用整页英文 include。核实操作事实并按实际语言交付更新导航。",
       "files": []
     },
     {

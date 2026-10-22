@@ -1,77 +1,52 @@
-# Network access for external clients (LAN vs VPN)
+# Network access for external clients
 
-**When to apply**: Any time the use case involves a client app running **outside Olares** (phone app, desktop app, browser on another computer) connecting to an Olares-hosted service. Proactively detect this from the user's input and apply the appropriate pattern below.
+Apply when a phone, computer, or other external client connects to an Olares service. Determine the protocol and supported access path before choosing a layout or copying a URL example.
 
-## Choosing between Tabs and Callout
+## Establish the actual connection
 
-- **Use Tabs** when the section's primary purpose is **establishing the connection**. The reader needs a complete walkthrough covering network setup, entering the address, and verifying connectivity. The connection itself is the problem this section solves.
-  - Example: Krita's "Connect Krita to ComfyUI" (`comfyui-for-krita.md`).
+Identify the caller's location, target service/instance, protocol, address source, port source, credentials, and required access policy. Use the current canonical guide and app configuration for the target version.
 
-- **Use Callout** when the section's primary purpose is **configuring the client app**, and the network address is just one field among many. The reader's focus is on getting the app set up, not on network connectivity.
-  - Example: OpenCode's "Configure the connection" (`opencode.md`), Context7's "Connect external clients via MCP" (`context7.md`).
+- HTTP APIs and web clients may use app entrances, local-domain access, or LarePass VPN as documented for that scenario.
+- SSH, SFTP, and game protocols require their own host and port. Do not convert a web URL into a non-HTTP address or assume its entrance exposes those protocols.
+- Multiple instances may have different local addresses or exported ports. Tell readers where to obtain the values for their selected instance.
+- Do not add authentication-level changes, domain rewriting, or a VPN route unless the current instructions support them. Do not infer remote access from a same-LAN test.
 
-**Simple test**: If the section is "how to connect", use tabs. If the section is "how to configure/set up", and the URL is one step in a larger procedure, use a callout.
+## Reuse supported procedures
 
-## Tabs pattern
+Search `docs/reusables/local-domain.md`, `docs/reusables/larepass-vpn.md`, corresponding Chinese fragments, and the current canonical local-access, private-network, entrance, and Overlay gateway guides. Verify filenames, regions, links, and applicability in the working repository.
 
-Use tab labels `#Use-.local-domain-(LAN)` and `#Use-.com-domain-(VPN)`.
+Include an applicable region if the reader needs the procedure inline. Link a separate prerequisite or platform-specific setup. Keep the app's actual fields and instance-specific values local. Do not manufacture an include just to eliminate a short app-specific explanation.
 
-### LAN tab template
+For LarePass VPN screenshots, check the existing assets before adding placeholders:
+- `/images/manual/get-started/larepass-vpn-desktop.png`
+- `/images/manual/get-started/larepass-vpn-mobile.png`
 
-User is on the same local network. Use the `.local` domain and `http`. No authentication level change or VPN needed.
+For documented `.local` access, preserve the current guide's scheme and naming rules. Link Windows-specific setup where relevant instead of assuming the name resolves on every client. Do not derive URL patterns from an old screenshot alone.
 
-Always include the Windows users callout after the intro sentence:
+## Choose a readable layout
 
-```markdown
-:::info Windows users
-On Windows, multi-level `.local` domains require additional setup. Try one of these:
-- **Import hosts in LarePass**: Open the LarePass desktop app and use the built-in option to import Olares hosts to your system.
-- **Use the single-level domain**: Change `https://806ba3e40.{username}.olares.com` to `http://806ba3e40-{username}-olares.local`.
+- Use headings for separate procedures that benefit from visible, linkable sections.
+- Use tabs for mutually exclusive paths when each tab can contain a complete procedure.
+- Use a brief callout when networking is incidental to the main configuration task.
+- Use a compact comparison table only if it helps readers choose a path. Do not repeat all of its content in subsequent tabs and callouts.
 
-For details, see [Access Olares services locally](../manual/best-practices/local-access.md).
-:::
-```
+No layout is mandatory merely because a section is about connecting. For a short primary path, a direct procedure can be sufficient.
 
-For the URL conversion step, use the established pattern:
-
-```markdown
-2. For **Host address**, use your [App] URL with the `.local` domain and `http`. For example, if your [App] URL is:
-    ```plain
-    https://abc123.{username}.olares.com
-    ```
-    Change it to:
-    ```plain
-    http://abc123.{username}.olares.local
-    ```
-```
-
-Do NOT use `"becomes"` or `"Change X to Y and A to B"` for URL conversions. Always use `"For example, if your URL is: ... Change it to: ..."`.
-
-### VPN tab template
-
-User is on a different network. Requires updating the authentication level and enabling LarePass VPN. Structure:
-
-1. A high-level step describing the access policy change (e.g., "Update [App]'s access policy to enable direct access from external apps:"), with sub-steps (a. b.) for the specific navigation and action. Bold the UI control name: **Authentication level**.
-2. A step for enabling LarePass VPN. This is a **single step**, not a separate H3 section. Reuse the existing LarePass VPN screenshot (`/images/manual/get-started/larepass-vpn-mobile.png` for mobile, `/images/manual/get-started/larepass-vpn-desktop.png` for desktop) instead of creating placeholders.
-3. Remaining connection steps.
-
-### Connection detail steps
-
-When entering server connection info, make each field its own numbered step rather than bundling them in an unordered list under a single "Enter the connection details" step. For example: one step for **Host address**, one step for username and password. This keeps each action distinct and scannable.
-
-## Callout pattern
-
-Use when the connection is just one step in a larger client configuration.
-
-The main steps use VPN + `.com` domain as the default path. Add a `:::tip` callout right after the VPN step to mention the `.local` alternative. Link to the best practices page for platform-specific details (including Windows) instead of inlining them.
+When tabs are useful, use descriptive labels and the site's existing component syntax:
 
 ```markdown
-1. Enable LarePass VPN on your computer to connect to Olares.
-   ![Enable LarePass VPN on desktop](/images/manual/get-started/larepass-vpn-desktop.png#bordered)
-
-   :::tip On the same local network?
-   If your computer and Olares are on the same LAN, you can skip VPN and use the `.local` domain instead. Replace `https://{hash}.{username}.olares.com` with `http://{hash}.{username}.olares.local` in the config below. For details, see [Access Olares services locally](../manual/best-practices/local-access.md).
-   :::
-
-2. [Next configuration step using the .com URL...]
+<tabs>
+<template #Same-LAN>
+[Complete supported LAN procedure]
+</template>
+<template #Remote-access>
+[Complete supported remote procedure]
+</template>
+</tabs>
 ```
+
+Use ordered steps for actions that must occur in sequence. Use a table or unordered list for parallel fields such as protocol, host, port, and username. State where each value comes from and where the command or client runs.
+
+## Check the result
+
+Keep a verified readiness or connection signal when needed to proceed. Give a relevant next action if it fails. Do not add a full client/network acceptance matrix to an ordinary use case.

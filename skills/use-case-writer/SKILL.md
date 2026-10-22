@@ -1,40 +1,45 @@
 ---
 name: use-case-writer
-description: Transform Chinese drafts or inputs into polished bilingual Olares documentation use cases. Produce the English page, EN sidebar entry, and gallery entry first; after the English version is finalized, create a complete standalone Chinese translation and ZH sidebar entry. Never use a whole-page @include as the Chinese deliverable. Use when the user wants to create, write, or rewrite an Olares use case, especially under docs/use-cases. For long-form manuals, developer docs, or troubleshooting, see olares-docs-writer. For UI strings and product copy, see olares-ux-writing.
+description: Create and revise bilingual Olares use case tutorials from Chinese or English drafts, app-porting notes, test results, implementation context, or existing PRs. Use when writing or editing app walkthroughs under docs/use-cases. Organize supported facts around a useful reader task and reuse applicable documentation. Produce English deliverables first and complete Chinese deliverables after English finalization. For manuals, developer references, or troubleshooting-only pages, see olares-docs-writer. For UI copy, see olares-ux-writing.
+
 metadata:
-  version: 0.4.0
+  version: 0.6.0
 ---
 
 # Olares Use Case Writer
 
-Transform Chinese drafts into polished English and Chinese use cases for the Olares documentation site.
+Turn source material into English and Chinese tutorials that help readers complete useful tasks on Olares.
 
 ## Purpose
 
-This skill converts Chinese input (drafts, notes, or descriptions) into properly formatted, publication-ready bilingual use case documentation that follows Olares' established conventions and style.
+Accept drafts, porting notes, test logs, screenshots, implementation changes, and existing PRs as evidence. Determine the reader and task before choosing an outline. A developer author does not make developers the target audience.
+
+Before drafting or reviewing, read [Tutorials from evidence](references/tutorial-from-evidence.md) for content selection and reuse, and [Writing style](references/writing-style.md) for prose conventions.
 
 ## Deliverables
 
-A complete initial task produces **three required files**. Do not stop after producing file 1.
+A new use case requires the English page and two discovery updates below. For revisions, update affected existing entries without duplicating them.
+
+Keep deliverables within the requested scope. Test notes do not automatically require public acceptance-test pages. Put execution records in the PR or an existing internal test record. Create a reader-facing validation or diagnostic guide only when requested.
 
 ### Required for every new use case (English-first)
 
-1. `docs/use-cases/<app>.md` — the English use case.
-2. Updated `docs/.vitepress/usecase.en.ts` — new entry in the correct category and alphabetical position.
-3. Updated `docs/.vitepress/data/useCases.ts` — new entry so the use case appears in the filterable gallery on the Use cases index page.
+1. `docs/use-cases/<app>.md`: the English use case.
+2. Updated `docs/.vitepress/usecase.en.ts`: new entry in the correct category and alphabetical position.
+3. Updated `docs/.vitepress/data/useCases.ts`: new entry so the use case appears in the filterable gallery on the Use cases index page.
 
 If you skip files 2-3, the use case will not appear in the sidebar or the gallery and will be invisible to readers.
 
 ### Created after English is finalized (Chinese)
 
-4. `docs/zh/use-cases/<app>.md` — a complete standalone Chinese translation with localized frontmatter, the AI-translation warning, and natural Chinese copy.
-5. Updated `docs/.vitepress/usecase.zh.ts` — matching entry under the `/zh/use-cases/` link prefix.
+4. `docs/zh/use-cases/<app>.md`: a complete standalone Chinese translation with localized frontmatter, the AI-translation warning, and natural Chinese copy.
+5. Updated `docs/.vitepress/usecase.zh.ts`: matching entry under the `/zh/use-cases/` link prefix.
 
 Do not create the Chinese page while the English copy is still changing. Once the user confirms the English version is finalized, create the complete Chinese translation automatically. Never use a whole-page `@include` stub as the Chinese deliverable. Localized reusable fragments may still be included from `docs/zh/reusables/` when both languages have matching reusable files.
 
 ## Output Format
 
-Generate a complete Markdown file following this exact structure:
+Use the following structure. Include Learning objectives in every use case. Adapt the main workflow headings and number of steps to the actual task.
 
 ### 1. Frontmatter (YAML)
 
@@ -69,7 +74,7 @@ doc_updated: "YYYY-MM-DD" # REQUIRED: Today's date in YYYY-MM-DD format
 1. Find the app's `OlaresManifest.yaml` file
 2. Look for `metadata.version` field
 3. Copy the exact version string (e.g., `"1.0.8"`)
-4. If the app is not yet published to Market (no `OlaresManifest.yaml` exists), use `"1.0.0"` as the default initial version.
+4. If the manifest is unavailable, obtain a traceable package version from the release source or author. Do not invent `"1.0.0"`. Identify a missing version as unresolved in the draft and review summary before publication.
 
 Example:
 ```yaml
@@ -101,7 +106,7 @@ Do not pad text, add filler sections, or inflate descriptions just because an SE
 
 - A simple single-app guide should stay short.
 - A complex multi-app workflow deserves the space it needs.
-- If a plugin reports thin content, first check whether steps are missing or unclear — not whether the word count is high enough.
+- If a plugin reports thin content, first check whether steps are missing or unclear, not whether the word count is high enough.
 
 ### 2. Title (H1)
 - Use action-oriented titles (start with a verb)
@@ -120,12 +125,12 @@ Do not pad text, add filler sections, or inflate descriptions just because an SE
 - Do NOT link app names to external sites (e.g., GitHub repositories). Use plain text for app names. The use case focuses on how to use the app within Olares, not on the upstream project.
 - Avoid writing a "feature laundry list" where each sentence just adds another feature with no hierarchy
 - Do NOT repeat the same information that appears in a summary table elsewhere in the doc
-- **When a Learning objectives section follows**, do NOT add a "This guide shows you how to..." sentence that repeats the same list. The intro should describe the app and its value, not enumerate the steps covered.
+- **Learning objectives follows the introduction.** Do NOT add a "This guide shows you how to..." sentence that repeats the same list. The intro should describe the app and its value, not enumerate the steps covered.
 - **CRITICAL: Do not fabricate descriptions for branded or proprietary apps.** When the app is a branded vendor product (e.g., NVIDIA NemoClaw, NVIDIA OpenShell), look up the official description from the vendor's product page (e.g., `build.nvidia.com/<product>`) before writing the intro. Do not guess what the acronym means, do not invent a backronym, and do not infer the product family from the name alone. If WebFetch times out, fall back to `curl -sL --max-time 30 <url>` and grep for the description.
 - **Do not pull in unrelated cross-references.** If two apps happen to share a model, framework, or component, that does not warrant a "the same model used in [other-use-case]" sentence. Link only when the other doc is a true prerequisite or a directly relevant follow-up.
 
-### 4. Learning Objectives (Optional)
-Use only when the guide teaches multiple distinct skills. Skip for straightforward single-workflow guides.
+### 4. Learning Objectives (Required)
+Include this section in every use case, including a short single-workflow guide. Use a brief list of concrete outcomes the reader will achieve. Keep it distinct from the introduction and avoid test-coverage goals. Use `学习目标` in Chinese.
 ```markdown
 ## Learning objectives
 In this guide, you will learn how to:
@@ -157,53 +162,23 @@ Do **not** bold hardware or spec mentions (GPU, CPU architecture, VRAM, etc.) in
 
 #### Installation section
 
-The install section follows a **fixed two-step format**:
+Use this standard pattern when installation requires no additional input:
 
 ```markdown
 ## Install [App Name]
 
 1. Open Market and search for "[App Name]".
-   ![App Name](/images/manual/use-cases/app-name.png#bordered)
-
 2. Click **Get**, then **Install**, and wait for installation to complete.
 ```
 
-Rules:
-- "Market" is an app name used standalone, so it is **not bolded**.
-- Do not add a third step like "open the app from Launchpad".
-- The second step always ends with "and wait for installation to complete".
-- Step 1 should include a Market screenshot of the app below it (indented inside the step). If the screenshot file does not exist yet, use an HTML comment placeholder: `<!-- ![App Name](/images/manual/use-cases/app-name.png#bordered) -->`.
-- **Capture install duration when the source provides one.** If the demo or input mentions an install time (e.g., "around 10 minutes"), include it in the install step with a network caveat: "Installation takes about 10 minutes, depending on your network." Do not invent a number when the source is silent.
+- Keep standalone Market unbolded. Search for a matching existing screenshot before adding an indented image or comment placeholder.
+- If installation prompts for a password, service URL, or configuration, explain where to obtain it and add the actions in their actual UI order, including confirmation. There is no fixed step count. Use a field table or unordered list for parallel settings.
+- Put first-run initialization after installation. If an installed app's service or guest OS is not ready yet, keep the observable readiness step before connecting.
+- Include a duration only when supported and useful for planning. Label environment-dependent estimates. A single test-run time does not establish typical installation time.
 
 #### Model name and endpoint acquisition
 
-When a use case requires a local LLM endpoint (e.g., NemoClaw, Open WebUI, AnythingLLM connecting to Ollama or a model app), follow this exact flow. Do NOT swap the order or merge the two sources.
-
-1. **Model name**: comes from the model app's Launchpad page, NOT from Settings.
-   - Direct the user to open the model app from Launchpad and read the model name shown on the main page.
-   - Reuse the existing model screenshot at `/images/one/<model>-downloaded.png` (e.g., `qwen3.5-27b-downloaded.png`). Check `openwebui.md` for the canonical reference before making a placeholder.
-
-2. **Endpoint URL**: comes from Settings > Applications > [App] > Shared entrances (or Entrances for non-shared apps).
-   - For shared apps, instruct the user to copy the URL from **Shared entrances**. Format is `http://{hash}.shared.olares.com`.
-   - For non-shared apps, use **Entrances** > **Set up endpoint**.
-   - Always direct users to obtain the endpoint from Settings rather than hardcoding URL templates.
-
-Do NOT tell the user to find the model name in Settings, and do NOT tell the user to find the endpoint on the Launchpad page. The two pieces of info live in different places.
-
-**Single-model app vs Ollama app**
-
-| | Single-model app | Ollama app |
-|:---|:---|:---|
-| What it is | One app packages one specific model | One app hosts multiple models |
-| Install from Market | Search the model name (e.g., `Qwen3.5 27B Q4_K_M (Ollama)`) | Search "Ollama" |
-| Model download | Opens from Launchpad; download starts automatically | Open Ollama from Launchpad, then run `ollama pull <model>` |
-| Model name source | Launchpad page displays it (e.g., `qwen3.5:27b-q4_K_M`) | `ollama list` or any model you have pulled |
-| Endpoint source | Settings > Applications > **[Model App]** > Shared entrances | Settings > Applications > **Ollama** > Shared entrances |
-| Endpoint selection | Select the model app name (or "Ollama API" if shown) | Select **Ollama API** |
-| Endpoint format | `http://{hash}.shared.olares.com` | `http://{hash}.shared.olares.com` |
-| Model ID for consumers | Exact model name shown on the app page | Any downloaded model ID (e.g., `qwen3.5:9b`) |
-
-When writing a use case, **default to the single-model app flow** unless the source material explicitly uses Ollama. This avoids forcing the user to install an extra app and pull models manually.
+When connecting models or app APIs, read [Connection sources](references/connection-sources.md). Identify Router, a direct model service, or an app API before choosing identifiers and endpoints. Use the current repository's canonical guide and applicable reusable regions. Do not apply the Launchpad model-name rule to Router identifiers.
 
 #### Feature sections
 
@@ -267,12 +242,7 @@ Content for method 2
 
 #### Network access for external clients (LAN vs VPN)
 
-When the use case involves a client app outside Olares (phone app, desktop app, browser on another computer) connecting to an Olares-hosted service, follow the patterns in `references/network-access-patterns.md`. It covers:
-
-- When to use Tabs vs a Callout (connection-establishing sections vs configuration sections).
-- The LAN tab template (`.local` domain, Windows users callout, URL conversion phrasing).
-- The VPN tab template (authentication-level update, LarePass VPN screenshot reuse, per-field connection steps).
-- The Callout pattern (default `.com` URL with `.local` tip).
+When the use case involves a client app outside Olares (phone app, desktop app, browser on another computer) connecting to an Olares-hosted service, follow the patterns in `references/network-access-patterns.md`. It covers protocol and access-path selection, current canonical instructions, reuse, and choosing headings, tabs, or callouts without repeating the same connection details.
 
 #### Tables (for configuration values)
 ```markdown
@@ -289,13 +259,13 @@ When the use case involves a client app outside Olares (phone app, desktop app, 
 **Long examples and prompts**
 When including a long code block, prompt, or transcript that exceeds 20 lines, collapse it with a `details` container so it does not dominate the page:
 
-```markdown
+````markdown
 ::: details Example: [specific description]
 ```text
 [content]
 ```
 :::
-```
+````
 
 The title must be specific (e.g., `Example: mini BFF prompt`), not generic (`Example prompt`).
 
@@ -332,7 +302,7 @@ When screenshots are not yet available, use HTML comments as placeholders so the
 **Screenshot placeholder decision tree**
 - Need a new screenshot and will capture it later → `<!-- ![...] -->`
 - Existing screenshot covers the same UI state → use the existing path directly
-- Unsure whether a suitable screenshot exists → start with `<!-- -->`, then search `docs/public/images` and replace if found
+- Unsure whether a suitable screenshot exists → search `docs/public/images` and nearby guides first, then use a comment placeholder only if none fits
 
 Only use placeholders for screenshots that genuinely do not yet exist.
 
@@ -361,128 +331,10 @@ Use "Learn more" as the standard heading (not "Next steps"). Format all items as
 
 ## Style Guidelines
 
-### Voice and Tone
-- Clear, direct, and natural. Write like you're explaining to a colleague, not drafting a formal specification.
-- Second person ("you")
-- Active voice
-- Professional but conversational and approachable
-- Avoid awkward dashes as sentence separators; use periods or restructure instead
-
-### Writing for Readability
-
-**Use simple, everyday words:**
-| Avoid | Use |
-|-------|-----|
-| client device | computer |
-| utilize | use |
-| initiate | start |
-| terminate | end |
-| verify | check (unless verification is the specific action) |
-
-**Be direct and action-oriented:**
-- ❌ "You will need to slightly modify the URL you copied earlier"
-- ✅ "Modify the URL slightly"
-
-**Avoid filler phrases:**
-- ❌ "In order to" → ✅ "To"
-- ❌ "It is important to note that" → Remove or just state the fact
-- ❌ "As mentioned previously" → Restate briefly or link
-- ❌ "Please be advised that" → Just say it
-
-**Write naturally:**
-- ❌ "Based on whether X, the process is different"
-- ✅ "The process depends on whether X"
-
-**Focus on what the user achieves, not the mechanism:**
-- ❌ "This guide will show you how to connect X to Y"
-- ✅ "This guide shows you how to [achieve the goal] using X and Y"
-
-**Prefer short, simple sentences over complex ones with multiple clauses.**
-
-### Terminology Conventions
-| Use | Avoid |
-|-----|-------|
-| Olares Market | Marketplace |
-| Market (no bold when standalone) | **Market** (bold only in nav paths) |
-| Launchpad | desktop |
-| Settings | system settings |
-| Control Hub | admin panel |
-| LarePass VPN | VPN connection |
-| Olares Files | Olares file system |
-| Click **Button** | Click the button |
-| Navigate to **Tab** | Go to the tab |
-
-### Bolding rules
-
-Bold only the following:
-- **UI controls and labels in navigation paths**: `**Settings** > **Applications** > **[App]**`, `Click **Get**`, `**Authentication level**`.
-- **Field names in configuration lists**: `- **VERSION:** Select your preferred version.`
-
-Do NOT bold:
-- App names used standalone (e.g., Files, Market, NemoClaw, OpenClaw). They are plain text.
-- Inline emphasis like `**not**`, `**important**`. Use plain text or restructure the sentence.
-- Hardware specs in Prerequisites (GPU, VRAM, CPU architecture).
-- Cross-reference titles inside link labels. The link itself is the emphasis.
-
-If you find yourself reaching for bold to add emphasis to a single word in prose, leave it plain. Bold is for UI affordances, not voice.
-
-### App name references
-
-**Market app names with qualifiers**
-Single-model apps in Market often include a suffix such as `(Ollama)` in their display name (e.g., `Qwen3.5 27B Q4_K_M (Ollama)`).
-
-- **First occurrence** in a use case: use the full Market name including the suffix.
-- **Subsequent references**: you may shorten to the model name alone (e.g., `Qwen3.5 27B`).
-- **In navigation paths** (Settings > Applications > ...): use the full name so the user can match it exactly in Settings.
-
-**Do not fabricate app names.** If the source material mentions a model but you are unsure of its exact Market name, search existing use cases or leave a placeholder comment.
-
-### Grammar Patterns
-- Install steps: `"Click **Get**, then **Install**, and wait for installation to complete."`
-- "Navigate to **Settings** > **Applications** > **[App]**"
-- "Ensure [condition] before proceeding"
-- "Wait for [process] to complete"
-- Use "might" instead of "may" to express possibility (e.g., "This might take a few minutes")
-
-### Common Phrases
-- "Prerequisites" (not "Before you begin")
-- "Learning objectives" (when applicable)
-- "In this guide, you will learn how to:"
-
-### Lists: Steps vs Configuration Fields vs Sub-steps
-
-**Numbered steps (1. 2. 3.)**: Use for sequential actions that must be performed in order.
-
-**CRITICAL: Do not insert non-list text (e.g., "Then, configure it in Jaaz:") between numbered steps.** This breaks the Markdown numbered list and causes step numbering to reset. If you need to group steps logically, either use a comment or keep all steps in a single continuous list.
-
-**Unordered lists (-)**: Use ONLY for:
-- Multiple configuration fields/options (no specific order required)
-- Prerequisites or requirements
-- Feature lists
-
-**Nested sub-steps (a. b. c.)**: Use for sequential operations under a main step. Each sub-step must be on its own line with a blank line after.
-
-**Examples:**
-
-```markdown
-<!-- Configuration fields - use unordered list -->
-3. When prompted, set environment variables:
-    - **VERSION:** Select your preferred version.
-    - **DISK_SIZE:** Allocate disk space.
-
-<!-- Operation steps - use sub-steps (a. b. c.) -->
-3. Open VNC Viewer and create a new connection:
-
-    a. Click **File** > **New Connection**.
-
-    b. Enter the address and port number.
-
-    c. Save the connection.
-```
-
-**Rule of thumb:**
-- If it's **filling in configuration values**, use `-` (unordered)
-- If it's **performing actions in sequence**, use `a. b. c.` (ordered sub-steps)
+Read [Writing style](references/writing-style.md) before drafting or reviewing. It defines punctuation, tutorial voice, terminology, bolding, and list conventions.
+- Do not use dashes to introduce explanations, insert asides, or join clauses. Range notation such as `12–128 characters` is allowed.
+- Do not use English or Chinese semicolons in authored prose. Preserve required syntax in code, commands, URLs, and exact UI labels.
+- Write a task-oriented tutorial. Keep useful success signals, but avoid test-report narration, fixed-answer assertions, repeated caveats, and irrelevant implementation details.
 
 ## Image Naming Conventions
 
@@ -499,60 +351,21 @@ ollama-authentication-level.png
 openclaw-persona-files.png
 ```
 
-All images should include `#bordered` and be stored in `/images/manual/use-cases/`.
+New use case screenshots belong in `/images/manual/use-cases/` and use `#bordered`. Reuse matching screenshots in other existing directories without copying them.
 
 ## Process
 
-0. **Pre-writing checks** - Before writing the first sentence, gather facts that you cannot fabricate:
+0. **Extract supported facts**. Read the source material and current app configuration. Check critical UI labels and screenshot-only values against the screenshot or a reliable source. Do not guess a value and hide the uncertainty in a FIXME. Track missing facts in the draft and review summary. Verify branded product descriptions with the vendor's official source.
 
-   **Endpoint patterns** - When a use case involves connecting Olares apps (e.g., Ollama, ComfyUI), do not fabricate endpoint URLs.
-   - Search existing use cases (e.g., `grep "olares.com" docs/use-cases/`) to find the correct endpoint patterns.
-   - Shared apps use **Shared entrances** in Olares Settings. The URL format is typically `http://{hash}.shared.olares.com`, NOT `https://{hash}.{username}.olares.com`.
-   - Non-shared apps use **Entrances** > **Set up endpoint** in Olares Settings.
-   - Always direct users to obtain the endpoint from **Settings** > **Applications** > **[App Name]** rather than hardcoding URL templates.
+1. **Choose the reader task and sort the evidence** using `references/tutorial-from-evidence.md`. Separate required actions, useful readiness checks, known user-facing limits, optional configuration, and engineering validation records. Distinguish demo hardware from real requirements.
 
-   **Brand and product descriptions for proprietary apps** - For any branded vendor product (e.g., NVIDIA NemoClaw, NVIDIA OpenShell, Cloudflare Workers), look up the official description from the vendor's product page before writing the intro. Do not guess what an acronym stands for or invent a backronym. If WebFetch times out, use `curl -sL --max-time 30 <url>` and grep the result.
+2. **Search for reuse before drafting**. Inspect `docs/reusables/`, localized fragments, canonical guides, and existing screenshots. Verify region names and applicability. Include required inline procedures, link separate prerequisites, and write app-specific differences locally.
 
-   **Screenshot-only information** - When the source material places critical config values (env var names, endpoint formats, exact menu labels) only inside screenshots with no accompanying text, you must still produce actionable steps. Do not leave the user guessing. Apply this fallback:
-   1. Write the most reasonable value based on Olares conventions and the surrounding context.
-   2. Append an HTML comment immediately after the value: `<!-- FIXME: verify against source screenshot -->`.
-   3. Flag it to the user during review so the screenshot can be checked.
+3. **Design a coherent example**. Select one useful outcome and a clear default path. Explain how readers can substitute their own data. Do not invent unsupported features, hard requirements, or successful test results.
 
-   Example:
-   ```markdown
-   - **ANTHROPIC_MODEL**: Enter the model identifier from step 2. For example:
-     ```plain
-     qwen3.5:27b-q4_K_M
-     ```
-     <!-- FIXME: verify against source screenshot -->
-   ```
+4. **Write the English tutorial**. Include Learning objectives. Explain where required values come from and where commands run. Place optional configuration after the main workflow. Use headings, tables, lists, and tabs only where they clarify the task.
 
-1. **Analyze the Chinese input** - Identify:
-   - The application/tool being documented
-   - The main workflow or task
-   - Prerequisites and dependencies (and which are already installed by the user, so link to those instead of writing a redundant install section)
-   - Configuration requirements
-   - Alternative paths or methods
-   - Install duration if the source mentions one (capture verbatim, with a network caveat)
-   - Hardware specs mentioned in source: distinguish "demo ran on this hardware" from "this is a hard requirement". Only the latter goes into Prerequisites.
-
-2. **Structure the content** - Map the Chinese content to the standard use case sections
-
-3. **Rewrite in English** - Following the style guidelines above
-
-4. **Add formatting** - Insert appropriate Markdown elements (tips, tables, code blocks, tabs)
-
-5. **Review** - Ensure:
-   - All configuration values are specific and actionable
-   - Commands are correct and complete
-   - Links use relative paths for internal docs
-   - Images follow naming conventions, and existing screenshots have been reused where available
-   - Terminology matches Olares conventions
-   - Bolding follows the rules in "Bolding rules" (no bold app names in plain prose, no bold `**not**` for emphasis)
-   - Brand and product descriptions match the vendor's official wording (for branded apps)
-   - No cross-references to unrelated use cases ("the same model used in [other-doc]")
-   - Model name acquisition flow uses the Launchpad page; endpoint URL acquisition uses Settings > Shared entrances
-   - **Frontmatter includes `app_version`, `doc_version`, `doc_updated`, and `head` keywords** (CRITICAL for new docs)
+5. **Review content and accuracy** with the final-review criteria in `references/tutorial-from-evidence.md` and the style reference. Preserve useful checks and known limits. Confirm model and endpoint sources match the connection type, and all required frontmatter is supported.
 
 6. **Create required English deliverables (REQUIRED, not optional)** - The English markdown file is only one of three required outputs. You MUST also update the English sidebar and the gallery data file. Skipping this step makes the use case invisible on the docs site.
 
@@ -569,11 +382,11 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
    3. **Remaining AI apps in alphabetical order** (ACE-Step → AnythingLLM → Bifrost → Claude Code → ...)
    Place new AI use cases in the correct alphabetical position within group 3, or in group 1/2 if the app clearly belongs there.
 
-   **`docs/.vitepress/data/useCases.ts`** (REQUIRED) - Add an entry to the `useCases` array so the app appears in the filterable gallery on the Use cases index page (`docs/use-cases/index.md`). The index page renders this array via the `UseCaseGallery` component; it does not list individual use cases itself, so a missing entry means the app is absent from the index. The gallery is locale-aware (it reads `lang` from VitePress and switches between English and Chinese), so each entry can carry both languages.
+   **`docs/.vitepress/data/useCases.ts`** (REQUIRED) - Add an entry to the `useCases` array so the app appears in the filterable gallery on the Use cases index page (`docs/use-cases/index.md`). The index page renders this array via the `UseCaseGallery` component. It does not list individual use cases itself, so a missing entry means the app is absent from the index. The gallery is locale-aware (it reads `lang` from VitePress and switches between English and Chinese), so each entry can carry both languages.
    - Entry format: `{ title: "<App name>", link: "/use-cases/<app>", category: "<Category>", description: "<short EN one-liner>", descriptionZh: "<short ZH one-liner>" },`
    - `title` (required): the app name as shown in the sidebar (e.g., `OpenClaw`, `Open WebUI`). Most app names are not translated, so `titleZh` is usually unnecessary. Add the optional `titleZh` only when the app has a real Chinese name (e.g., a built-in app like `文件管理器`).
    - `link` (required): the site-absolute path `/use-cases/<app>` (no `.md`, no leading `./`).
-   - `category` (required): must match one of the categories in the `useCaseCategories` array exactly (`AI agent`, `AI workbench`, `Creative media`, `Model services`, `Embodied AI`, `Virtual machine`, `Entertainment`, `Productivity`, `Developer tools`, `Utilities`). Place the entry inside that category's block in the array. `category` is the canonical English key; do NOT translate it here. The gallery localizes pill labels via the separate `categoryLabelsZh` map. If the use case needs a brand-new category, add it to BOTH `useCaseCategories` (English order) and `categoryLabelsZh` (Chinese label) before using it.
+   - `category` (required): must match one of the categories in the `useCaseCategories` array exactly (`AI agent`, `AI workbench`, `Creative media`, `Model services`, `Embodied AI`, `Virtual machine`, `Entertainment`, `Productivity`, `Developer tools`, `Utilities`). Place the entry inside that category's block in the array. `category` is the canonical English key. Do NOT translate it here. The gallery localizes pill labels via the separate `categoryLabelsZh` map. If the use case needs a brand-new category, add it to BOTH `useCaseCategories` (English order) and `categoryLabelsZh` (Chinese label) before using it.
    - `description` (required): a short, punchy English gallery blurb (about 5-12 words), no trailing period. This is NOT the long SEO `description` from the page frontmatter. Write a concise one-liner.
    - `descriptionZh` (recommended): the Chinese gallery blurb, no trailing period. If omitted, the gallery falls back to the English `description` on the Chinese site, so add it whenever you have the Chinese copy.
    - When **deleting** a use case, remove its entry from this array too, or it will leave a dead card.
@@ -597,11 +410,11 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
      - Reuse matching fragments from `docs/zh/reusables/` when appropriate. Never include the whole English page.
      - Add the matching entry to `docs/.vitepress/usecase.zh.ts`.
 
-8. **Verify all deliverables exist** - Before reporting completion, confirm that the required files have been created or updated:
-   - [ ] `docs/use-cases/<app>.md` exists
+8. **Review the final state and verify deliverables**. After the last content change, apply the final-review criteria in `references/tutorial-from-evidence.md` to the affected English and Chinese pages, metadata, gallery text, and applicable included fragments. Repeat after technical follow-ups or FAQ additions. Then confirm:
+   - [ ] `docs/use-cases/<app>.md` exists and includes Learning objectives
    - [ ] `docs/.vitepress/usecase.en.ts` contains the new entry
    - [ ] `docs/.vitepress/data/useCases.ts` contains the new gallery entry
-   - [ ] (If English finalized) `docs/zh/use-cases/<app>.md` contains a complete Chinese translation, not a whole-page `@include`
+   - [ ] (If English finalized) `docs/zh/use-cases/<app>.md` contains a complete Chinese translation with 学习目标, not a whole-page `@include`
    - [ ] (If English finalized) `docs/.vitepress/usecase.zh.ts` contains the new entry
 
    If any required file is missing, the task is incomplete. Do not tell the user the use case is ready until all required items are in place.
@@ -610,4 +423,4 @@ All images should include `#bordered` and be stored in `/images/manual/use-cases
 
 ## Example Transformation
 
-For a sample showing how a Chinese input becomes a polished English use case (frontmatter, intro, prerequisites, install steps, and tips), see `references/example-transformation.md`.
+For examples of turning source notes into reader tasks, including required Learning objectives and retained readiness checks, see `references/example-transformation.md`. These are editorial examples, not current product specifications.

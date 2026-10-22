@@ -1,8 +1,8 @@
 ---
 name: olares-docs-writer
-description: Write Olares documentation in English and Chinese for the VitePress docs site. Use when the user wants to create or edit manuals, developer docs, troubleshooting guides, FAQ entries, or translations between English and Chinese, and when they mention `docs.olares.com`, `docs/manual/`, `docs/developer/`, or `docs/manual/help/`. Enforces the Olares style guide and VitePress conventions. For Chinese-to-English use case tutorials, use use-case-writer instead. For UI strings and product copy, see olares-ux-writing.
+description: Write Olares documentation in English and Chinese for the VitePress docs site. Use when the user wants to create or edit manuals, developer docs, troubleshooting guides, FAQ entries, or translations between English and Chinese, and when they mention `docs.olares.com`, `docs/manual/`, `docs/developer/`, or `docs/manual/help/`. Enforces the Olares style guide and VitePress conventions. For app use case tutorials from any source, including porting notes and test records, use use-case-writer instead. For UI strings and product copy, see olares-ux-writing.
 metadata:
-  version: 0.2.0
+  version: 0.3.0
 ---
 
 # Olares Documentation Writer
@@ -23,29 +23,7 @@ Olares documentation uses VitePress with these key characteristics:
 
 ### 1. Use Case Tutorial
 
-Step-by-step guides for specific applications or workflows.
-
-**Structure:**
-1. Frontmatter with `outline` and `description`
-2. Main title (`#`) — descriptive and actionable
-3. State gate (optional) — `:::warning` or `:::info` confirming the user's starting state for tutorials with hard constraints
-4. Introduction paragraph — what this guide covers
-5. Learning objectives — bullet list of what users will learn
-6. Prerequisites — what users need before starting
-7. Step-by-step instructions — numbered lists with clear actions; add verification hints after critical steps
-8. Common mistakes to avoid (optional) — prevent errors before they happen
-9. Tips and info boxes (`:::tip`, `:::info`)
-10. FAQ section (optional)
-
-**Example frontmatter:**
-```yaml
----
-outline: [2, 3]
-description: Step-by-step guide to installing ACE-Step AI on Olares...
----
-```
-
-For Chinese-to-English use case work, use the dedicated `use-case-writer` skill. For a complete English+Chinese sample, see `references/examples/use-case-en.md` and `references/examples/use-case-zh.md`.
+Route all app use cases to `use-case-writer`, regardless of source language or whether the input is a draft, porting log, test result, or PR. It owns the task-oriented workflow, required Learning objectives, reusable fragments, version metadata, English-first delivery, and complete Chinese translation. Do not use the generic examples here to override that skill's current requirements.
 
 ### 2. Manual/Guide Documentation
 
@@ -354,15 +332,9 @@ When translating between English and Chinese:
 4. **Maintain structure** — keep the same heading hierarchy
 5. **Adapt examples** — use Chinese examples where appropriate
 
-### Chinese doc reuse via @include
+### Chinese use case delivery and reuse
 
-Most Chinese use case docs reuse the English content directly via VitePress `@include`. Instead of translating the entire file, create a one-line Chinese file:
-
-```markdown
-<!--@include: ../../use-cases/<app>.md-->
-```
-
-This inherits the full English doc including frontmatter. Only create a standalone Chinese translation when the content needs significant localization.
+For use cases, follow `use-case-writer` for English finalization and complete standalone Chinese delivery. Never substitute a whole English-page include for the Chinese page. Use matching localized reusable fragments where appropriate, checking their applicability, regions, and links.
 
 ## File Organization
 
@@ -391,7 +363,7 @@ docs/
 
 ## Navigation Updates
 
-After creating a new doc, update **both** sidebar configs:
+For new use cases, follow `use-case-writer` for required sidebar and gallery entries. The language-specific sidebar entry shapes are shown below:
 
 **For English** (`.vitepress/usecase.en.ts`):
 ```typescript
@@ -409,7 +381,7 @@ After creating a new doc, update **both** sidebar configs:
 }
 ```
 
-Always update both files together. Most app names are not translated in the Chinese sidebar (e.g., "ComfyUI", "Ollama", "Jaaz" stay as-is).
+Update navigation for the language deliverables in scope. For use cases, follow the English-first and Chinese-finalization workflow in `use-case-writer` rather than creating premature Chinese entries. Most app names remain untranslated.
 
 ## Special Considerations
 
@@ -431,7 +403,7 @@ For more information, visit [Olares website](https://www.olares.com).
 
 ### Specialized Skills
 
-- **Use case tutorials** (in `/docs/use-cases/` or `/docs/zh/use-cases/`): Use `use-case-writer` instead. It handles Chinese-to-English transformation, frontmatter `app_version`/`doc_version`/`doc_updated` fields, and the install-section / endpoint-acquisition / network-access patterns.
+- **Use case tutorials** (in `/docs/use-cases/` or `/docs/zh/use-cases/`): Use `use-case-writer` instead. It handles drafts and engineering evidence, reader-task selection, required Learning objectives, content reuse, version metadata, and language deliverables.
 - **UI strings and product copy**: Use `olares-ux-writing` for buttons, error messages, notifications, empty states, confirmation dialogs.
 
 ### Olares One Documentation

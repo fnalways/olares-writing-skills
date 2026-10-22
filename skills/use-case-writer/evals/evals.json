@@ -5,19 +5,152 @@
       "id": 1,
       "name": "n8n-workflow-automation",
       "prompt": "帮我写一篇关于在 Olares 上使用 n8n 工作流自动化的英文 use case。n8n 是一个开源的工作流自动化工具，可以连接各种服务和应用。主要内容包括：1) 介绍 n8n 是什么；2) 前置条件是需要先安装好 Ollama；3) 从 Market 安装 n8n 的步骤；4) 如何配置 webhook 来接收外部事件；5) 创建一个简单的工作流示例。请输出完整的 Markdown 文件，放在 docs/use-cases/n8n.md",
-      "expected_output": "A complete English use case document for n8n following Olares documentation style, with proper frontmatter, installation steps, webhook configuration, and workflow examples"
+      "expected_output": "English use case with required Learning objectives, actionable supported steps, and the EN sidebar/gallery updates. Link the already-installed dependency instead of repeating installation. Identify missing technical facts rather than fabricating webhook or authentication behavior."
     },
     {
       "id": 2,
       "name": "comfyui-basic-rewrite",
       "prompt": "将以下中文内容改写成适合 Olares 文档站的英文 use case：ComfyUI 是一个基于节点的 Stable Diffusion 图形化界面。用户可以通过拖拽节点来构建图像生成工作流。在 Olares 上使用 ComfyUI，你可以：1) 从 Market 安装 ComfyUI；2) 导入现有的工作流；3) 生成 AI 图像。需要的前置条件是已经安装并运行 Ollama，且安装了至少一个图像生成模型。",
-      "expected_output": "An English use case document for ComfyUI with proper structure, frontmatter, prerequisites section mentioning Ollama, and clear installation/configuration steps"
+      "expected_output": "English use case with required Learning objectives and supported configuration facts. Verify whether the supplied Ollama prerequisite is actually relevant instead of treating every claim in the draft as a product requirement. Flag unsupported dependencies for clarification."
     },
     {
       "id": 3,
       "name": "plex-media-server",
-      "prompt": "根据以下中文草稿写一篇英文 use case：Plex 是一个媒体服务器软件，可以在 Olares 上搭建个人影音中心。教程需要包括：1) Plex 简介和优势（数据隐私）；2) 安装步骤 - 从 Market 搜索 Plex 并安装；3) 配置媒体库 - 添加电影和电视剧文件夹；4) 远程访问设置 - 通过 LarePass VPN；5) 客户端推荐。注意使用标准的 Olares use case 格式，包含 description frontmatter、Learning objectives、Before you begin 等章节。",
-      "expected_output": "A complete English use case for Plex Media Server following Olares conventions, with all standard sections including frontmatter, learning objectives, prerequisites, installation steps, and next steps"
+      "prompt": "根据以下中文草稿写一篇英文 use case：Plex 是一个媒体服务器软件，可以在 Olares 上搭建个人影音中心。教程需要包括：1) Plex 简介和优势（数据隐私）；2) 安装步骤 - 从 Market 搜索 Plex 并安装；3) 配置媒体库 - 添加电影和电视剧文件夹；4) 远程访问设置 - 通过 LarePass VPN；5) 客户端推荐。注意使用标准的 Olares use case 格式，包含 description frontmatter、Learning objectives、Prerequisites 等章节。",
+      "expected_output": "English use case with required Learning objectives, standard Prerequisites and Learn more headings, supported installation and media workflow, and EN discovery updates. Preserve requested language scope and verify remote access instead of assuming every network method works."
+    },
+    {
+      "id": 4,
+      "name": "research-run-to-tutorial",
+      "prompt": "根据研发笔记写 Local Deep Research 教程。笔记含研究问题、引用阅读、Markdown/PDF 导出、六项登录/历史/导出验收，以及一次运行耗时 130 秒、8 个来源。应用通过 Router 默认聊天模型与 SearXNG 搜索。安装表单需要 SearXNG URL。请给出结构和需要保留的内容。",
+      "expected_output": "Include Learning objectives and organize around research, source review, and export. Place the required SearXNG URL at the actual installation prompt and identify its source. Keep run measurements and repeated acceptance checks in PR notes, without claiming typical timing.",
+      "assertions": [
+        "Include Learning objectives and organize around research, source review, and export.",
+        "Place the required SearXNG URL at the actual installation prompt and identify its source.",
+        "Keep run measurements and repeated acceptance checks in PR notes, without claiming typical timing."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "game-server-useful-schedule",
+      "prompt": "把游戏服务器移植记录整理成教程。已确认当前游戏支持 playing 查询人数与 save 保存世界，Panel 可用 cron 定时执行。原测试每分钟执行 playing 并检查输出后关闭计划。用户想和朋友维护游戏世界。素材另含镜像摘要、UID/GID 校验和 Server started 启动日志。",
+      "expected_output": "Use a meaningful supported task such as scheduled saves, with Learning objectives. Keep startup readiness and relevant access/backup constraints. Keep implementation validation records outside the normal workflow without implying untested capacity.",
+      "assertions": [
+        "Use a meaningful supported task such as scheduled saves, with Learning objectives.",
+        "Keep startup readiness and relevant access/backup constraints.",
+        "Keep implementation validation records outside the normal workflow without implying untested capacity."
+      ]
+    },
+    {
+      "id": 6,
+      "name": "rag-scenario-not-fixed-answer",
+      "prompt": "审阅一个知识图谱教程。初稿只有一行实验室描述，要求回答必须含 Suzhou 和 Dr. Chen。应用支持多文档上传、处理、文档问答和关系浏览。重组这个示例，让读者知道怎么替换自己的材料。",
+      "expected_output": "Use a coherent, useful scenario, label fictional material, and retain Learning objectives. Explain processing and source inspection rather than exact generated-answer matching. Do not claim a newly designed example has been executed.",
+      "assertions": [
+        "Use a coherent, useful scenario, label fictional material, and retain Learning objectives.",
+        "Explain processing and source inspection rather than exact generated-answer matching.",
+        "Do not claim a newly designed example has been executed."
+      ]
+    },
+    {
+      "id": 7,
+      "name": "known-limits-remain",
+      "prompt": "帮我把这段技术说明改成教程 FAQ：当前版本 Graph Navigator 有关系但 Graph RAG 可能漏召回，编号相近的实体更容易出现。可用 Document RAG 查原段落。Agent 工具仍固定 default collection。研发测了 23 个用例，多次重跑结果不同，问题未修复。",
+      "expected_output": "Keep the user-facing retrieval and collection limitations with scope and next actions. Move test counts/retry chronology out of the FAQ, without claiming a fix. Keep concise prose and avoid semicolons while preserving technical names.",
+      "assertions": [
+        "Keep the user-facing retrieval and collection limitations with scope and next actions.",
+        "Move test counts/retry chronology out of the FAQ, without claiming a fix.",
+        "Keep concise prose and avoid semicolons while preserving technical names."
+      ]
+    },
+    {
+      "id": 8,
+      "name": "reuse-with-localized-regions",
+      "prompt": "准备写模型切换段落。仓库 docs/reusables/ai-service-connections.md 与 docs/zh/reusables/ai-service-connections.md 都有 use-different-model region，含 default-chat 和 Router 完整模型标识说明。请先检索确认适用性。英文已定稿，需要完整中文页。",
+      "expected_output": "Read the actual fragment and check it fits before including it. Use the localized fragment on the Chinese page and verify region/link resolution. Deliver a full Chinese page with 学习目标, not an entire English-page include.",
+      "assertions": [
+        "Read the actual fragment and check it fits before including it.",
+        "Use the localized fragment on the Chinese page and verify region/link resolution.",
+        "Deliver a full Chinese page with 学习目标, not an entire English-page include."
+      ]
+    },
+    {
+      "id": 9,
+      "name": "router-versus-direct-service",
+      "prompt": "分别写两个应用的连接指导：A 通过 Router 调模型，Router 显示完整标识 Olares/example/model；B 直接调用 Ollama，已安装模型在 ollama list 中显示 example:latest。两者入口不同。不要实际调用服务。",
+      "expected_output": "Use Router identifiers for A and the actual Ollama identifier for B. Obtain each endpoint from the appropriate connection view and check protocol/caller context. Do not force a Launchpad model-name source or universal API-key/base-path rule.",
+      "assertions": [
+        "Use Router identifiers for A and the actual Ollama identifier for B.",
+        "Obtain each endpoint from the appropriate connection view and check protocol/caller context.",
+        "Do not force a Launchpad model-name source or universal API-key/base-path rule."
+      ]
+    },
+    {
+      "id": 10,
+      "name": "installation-extra-fields",
+      "prompt": "写应用安装段落。当前 UI 顺序已确认：Market 搜索应用，Get，Install，然后填写服务 URL 和管理员密码，Confirm 后安装开始。URL 从依赖服务的 API 入口取得。请保持操作清晰。",
+      "expected_output": "Preserve actual UI order and include required input sources and confirmation. Use enough steps and a field table/list rather than squeezing into a fixed two-step pattern. Do not invent an installation duration.",
+      "assertions": [
+        "Preserve actual UI order and include required input sources and confirmation.",
+        "Use enough steps and a field table/list rather than squeezing into a fixed two-step pattern.",
+        "Do not invent an installation duration."
+      ]
+    },
+    {
+      "id": 11,
+      "name": "technical-followup-final-review",
+      "prompt": "英文教程已编辑，中文已完成。研发新增 FAQ：The graph contains relationships; retrieval can still miss the target. 中文为：图中已有关系；检索仍可能遗漏目标。代码例子含 for x in a b; do echo \"$x\"; done，密码范围为 12–128 characters。请更新并检查最终版本。",
+      "expected_output": "Rewrite prose semicolons in both languages and review the added material in final context. Preserve shell syntax and the numeric range dash. Keep the retrieval limitation and check language consistency, without deleting existing Learning objectives.",
+      "assertions": [
+        "Rewrite prose semicolons in both languages and review the added material in final context.",
+        "Preserve shell syntax and the numeric range dash.",
+        "Keep the retrieval limitation and check language consistency, without deleting existing Learning objectives."
+      ]
+    },
+    {
+      "id": 12,
+      "name": "qemu-deliverable-boundary",
+      "prompt": "用 QEMU 移植记录写应用使用教程。素材附 14 项验收、四发行版回归、machine-id/boot-id、resize 与 clone 隔离测试。需要教程和正常导航入口，请列出交付文件与内容安排。",
+      "expected_output": "Produce the requested guide and discovery updates with Learning objectives. Do not automatically add or publish qemu-validation pages. Preserve execution evidence in PR/internal records and retain user-facing limitations.",
+      "assertions": [
+        "Produce the requested guide and discovery updates with Learning objectives.",
+        "Do not automatically add or publish qemu-validation pages.",
+        "Preserve execution evidence in PR/internal records and retain user-facing limitations."
+      ]
+    },
+    {
+      "id": 13,
+      "name": "guest-readiness-is-required",
+      "prompt": "精简 QEMU 教程，安装完成后 Olares 显示应用运行，但 Linux 镜像还在下载和初始化。应用页面会展示进度和就绪信息，必须就绪才能 SSH。请减少测试报告口吻。",
+      "expected_output": "Keep a readiness step and explain where to observe it before SSH. Remove acceptance narration rather than necessary checks. Keep Learning objectives and do not invent an exact status label or duration.",
+      "assertions": [
+        "Keep a readiness step and explain where to observe it before SSH.",
+        "Remove acceptance narration rather than necessary checks.",
+        "Keep Learning objectives and do not invent an exact status label or duration."
+      ]
+    },
+    {
+      "id": 14,
+      "name": "short-guide-learning-objectives",
+      "prompt": "整理一篇简短的首次安装教程。应用支持 Ubuntu 和 Debian，示例用 Ubuntu，稍后可创建独立 Debian 实例。用户只需要一个明确的首次操作路径，请保持简洁。",
+      "expected_output": "Include brief Learning objectives even for a short guide. Choose an explicit example path, distinguishing example settings from defaults and support limits. Place other choices where relevant without duplicating the introduction.",
+      "assertions": [
+        "Include brief Learning objectives even for a short guide.",
+        "Choose an explicit example path, distinguishing example settings from defaults and support limits.",
+        "Place other choices where relevant without duplicating the introduction."
+      ]
+    },
+    {
+      "id": 15,
+      "name": "instance-address-and-file-transfer",
+      "prompt": "把这段扩充成能操作的教程片段：用 SSH 登录，用 SFTP 传文件。已确认 LAN 用实例 Overlay IP:22，VPN 用 Olares ID 对应域名加该实例 Export ports 中的 SSH 端口，账号按发行版。上传目的地是 Linux 用户 home，不是自动挂载的 Olares Files。不同 clone 有自己的连接信息。",
+      "expected_output": "Explain address/port/credential sources for the selected instance and network path. Provide usable transfer steps or a precise existing guide, including destination and result. Do not apply HTTP URL conversion to SSH/SFTP, repeat all connection details unnecessarily, or invent missing IDs.",
+      "assertions": [
+        "Explain address/port/credential sources for the selected instance and network path.",
+        "Provide usable transfer steps or a precise existing guide, including destination and result.",
+        "Do not apply HTTP URL conversion to SSH/SFTP, repeat all connection details unnecessarily, or invent missing IDs."
+      ]
     }
-  ]
+  ],
+  "evaluation_notes": "These are regression scenarios, not recorded passing runs. Evaluate task usefulness, supported facts, required Learning objectives, scope, reuse, and final-state consistency. Do not use merged PR text as the sole gold answer."
 }
