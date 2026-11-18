@@ -2,7 +2,7 @@
 name: olares-docs-writer
 description: Write Olares documentation in English and Chinese for the VitePress docs site. Use when the user wants to create or edit manuals, developer docs, troubleshooting guides, FAQ entries, or translations between English and Chinese, and when they mention `docs.olares.com`, `docs/manual/`, `docs/developer/`, or `docs/manual/help/`. Enforces the Olares style guide and VitePress conventions. For app use case tutorials from any source, including porting notes and test records, use use-case-writer instead. For UI strings and product copy, see olares-ux-writing.
 metadata:
-  version: 0.3.0
+  version: 0.3.1
 ---
 
 # Olares Documentation Writer
@@ -23,37 +23,17 @@ Olares documentation uses VitePress with these key characteristics:
 
 ### 1. Use Case Tutorial
 
-Route all app use cases to `use-case-writer`, regardless of source language or whether the input is a draft, porting log, test result, or PR. It owns the task-oriented workflow, required Learning objectives, reusable fragments, version metadata, English-first delivery, and complete Chinese translation. Do not use the generic examples here to override that skill's current requirements.
+Route all app use cases to `use-case-writer`, regardless of source language or whether the input is a draft, porting log, test result, or PR. It owns the task-oriented workflow, required Learning objectives, reusable fragments, version metadata, and bilingual delivery when in scope. Do not use the generic examples or warning rules here to override that skill's current requirements.
 
 ### 2. Manual/Guide Documentation
 
 Feature explanations and user guides.
 
-**Structure:**
-1. Frontmatter with `description`
-2. Main title
-3. "When to use this" paragraph — prevents users from applying the wrong guide
-4. Concept explanation
-5. Feature overview
-6. How-to sections with irreversible-action warnings
-7. Configuration details with common error guidance where applicable
+Choose sections that help the reader complete the task. Use a "When to use this" explanation when similar guides or starting states could cause confusion. Add concept, feature, configuration, or error guidance only when it affects the reader's choices or actions. Explain irreversible consequences next to the action.
 
 ### 3. Index Pages
 
-Use `FilterableList` component for use cases index:
-
-```yaml
----
-description: Explore practical use cases of Olares...
----
-# Use cases
-
-Intro paragraph...
-
-<FilterableList :items="[
-  { title: 'App Name', link: './app-file.html', tags: ['AI'] },
-]" />
-```
+The use cases index uses `<UseCaseGallery />` and reads entries from `docs/.vitepress/data/useCases.ts`. For a new app use case, follow `use-case-writer` to update the gallery data and the sidebar entries for the languages in scope. Do not add a hard-coded `FilterableList` to the use cases index.
 
 ### 4. Developer Documentation
 
@@ -219,37 +199,39 @@ Chinese docs must read like they were written in Chinese, not translated from En
 
 ## Error-Prevention Design
 
-Every document should be structured to prevent users from making mistakes, not just explain how to do things correctly.
+Help readers avoid consequential mistakes without filling the page with defensive statements. Give each constraint or consequence once, where it affects a decision.
 
 ### 1. State gating at entry
 
-Before any steps begin, help users confirm they are in the right state:
+Before steps begin, state a required starting state when it could be missed:
 
-- Use a `:::warning` callout at the top of the page when the tutorial requires a specific starting state (e.g., unactivated device, fresh install). A `:::info` callout is acceptable for softer checkpoints.
+- Use a `:::warning` at the top only when starting in the wrong state could cause serious loss or make the procedure impossible. For ordinary prerequisites, use a short sentence or list.
 - If two states require completely different flows, create two documents and let users choose at the index level. Do not mix incompatible paths in one tutorial.
 - Never bury a hard constraint in a Prerequisites bullet list alone.
 
 ### 2. Prevent mistakes before they happen
 
-Within steps, identify the most common errors and block them in advance:
+Within steps, prevent likely mistakes supported by the task evidence:
 
-- Use `:::warning` directly inside the step where the mistake would occur.
-- Explain what NOT to do, not just what to do.
-- Add verification sub-steps after critical actions (for example, "Check that X shows Y").
+- Use a brief instruction or note beside the action. Use a warning only when the consequence warrants one.
+- State what not to do only when it prevents a concrete mistake. Do not restate validation already performed clearly by the UI.
+- Add a check after an action only when its result determines whether the reader should continue, wait, or recover.
 
 ### 3. Guard irreversible actions
 
-Any step that causes data loss, account binding, or cannot be undone must have:
+For an instructed action that permanently deletes data, binds an account, or cannot be undone, give the reader:
 
 - A `:::warning` callout before the step.
 - A clear description of the consequence.
 - A link to the escape route (for example, how to back up or how to factory reset).
 
+For routine reminders, such as a page refresh clearing an unsaved conversation, use concise prose before the relevant action instead of a warning callout.
+
 ### 4. Use the correct admonition type
 
 Choose the admonition type based on the consequence of ignoring it:
 
-- `:::warning` — Hard constraints, irreversible actions, or conditions that make the tutorial impossible to complete if ignored. Place these at the top of the page and repeat at critical decision points.
+- `:::warning` — Hard constraints and irreversible actions with serious consequences. Place it at the decision point and do not repeat the same warning without a new decision.
 - `:::info` — Background context, optional paths, or supplementary details that don't block the main flow.
 - `:::tip` — Efficiency improvements, shortcuts, or best practices.
 
@@ -260,8 +242,8 @@ Never place a hard constraint in an `:::info` box.
 Before submitting a document, ask these questions:
 
 1. What state is the user most likely in when they open this page? Did I help them confirm this is the right guide?
-2. If a user skips Prerequisites and jumps to Step 1, will they fail? If yes, move the critical prerequisite into the step or add a state gate at the top.
-3. Which step is most commonly done incorrectly? Did I say "Do not X" directly in that step?
+2. If a user skips Prerequisites and jumps to Step 1, will they fail? If yes, put the necessary condition beside the action or add a state gate when the consequence is serious.
+3. Which mistake is likely and consequential? Is the guidance beside that action and proportional to the consequence?
 4. Are there any irreversible actions? Did I warn the user before they reach that step?
 5. After critical steps, did I tell the user how to verify they are on track?
 
@@ -274,6 +256,8 @@ Three Olares-specific rules to keep in mind:
 - **Bullet labels with bold**: Use bold only when a label acts as a category header (`- **Hardware**: ...`). Do NOT bold for emphasis in body text or in admonition labels (`**Verify changes:**` inside a warning).
 - **Frontmatter required fields**: Every page needs `description`. Most pages also need `outline: [2, 3]`.
 - **Admonition types**: Choose based on consequence, not emphasis. `:::warning` for hard constraints and irreversible actions. `:::info` for supplementary context. `:::tip` for efficiency improvements. Never bury a hard constraint in `:::info`.
+
+For a general link to an upstream project, use its current documentation or repository page. Pin a tag or commit only when a statement depends on that specific version, and label the link accordingly.
 
 ## Common Sections
 
@@ -297,16 +281,14 @@ By the end of this tutorial, you will learn how to:
 - Requirement two.
 ```
 
-### Installation Steps
+### UI procedure
 
 ```markdown
-## Install AppName
+## Change a setting
 
-1. Open the **Market** app in your Olares web interface.
-2. Search for "AppName".
-3. Click **Get**, then click **Install**.
-   ![Installation screenshot](../public/images/manual/use-cases/filename.png#bordered)
-4. Wait for the installation to complete.
+1. Go to **Settings** > **Applications**.
+2. Select the app and change the setting.
+3. Click **Apply** and wait for the app to restart if required.
 ```
 
 ### Configuration Section
@@ -334,7 +316,7 @@ When translating between English and Chinese:
 
 ### Chinese use case delivery and reuse
 
-For use cases, follow `use-case-writer` for English finalization and complete standalone Chinese delivery. Never substitute a whole English-page include for the Chinese page. Use matching localized reusable fragments where appropriate, checking their applicability, regions, and links.
+For use cases, follow `use-case-writer` for English-first drafting and complete standalone Chinese delivery when in scope. Never substitute a whole English-page include for the Chinese page. Use matching localized reusable fragments where appropriate, checking their applicability, regions, and links.
 
 ## File Organization
 
@@ -381,7 +363,7 @@ For new use cases, follow `use-case-writer` for required sidebar and gallery ent
 }
 ```
 
-Update navigation for the language deliverables in scope. For use cases, follow the English-first and Chinese-finalization workflow in `use-case-writer` rather than creating premature Chinese entries. Most app names remain untranslated.
+Update navigation for the language deliverables in scope. For use cases, follow the English-first bilingual workflow in `use-case-writer`. Most app names remain untranslated.
 
 ## Special Considerations
 
@@ -437,15 +419,13 @@ File location: `/docs/one/` (English) and `/docs/zh/one/` (Chinese)
 9. **Be consistent** with terminology across pages
 10. **Use correct domains** — .com for English, .cn for Chinese
 11. **Check for specialized skills** — `use-case-writer` for use cases, `olares-ux-writing` for UI copy
-12. **Surface hard constraints before learning objectives** — If a tutorial requires a specific starting state, announce it in a `:::warning` at the top. Don't rely on Prerequisites alone.
-13. **Add verification hints after critical steps** — Tell users how to confirm they succeeded before moving on.
+12. **Surface critical starting states** — State them before the action they affect. Use a top-of-page warning only when the consequence warrants it.
+13. **Add useful checks after critical steps** — Tell readers what to observe when it determines whether they should continue, wait, or recover.
 
 ## References
 
 - `references/document-types/troubleshooting.md` — Full Type 5 template, section guidelines, complex diagnostic flow
 - `references/markdown-conventions.md` — VitePress frontmatter, admonitions, code blocks, lists, tables
 - `references/developer-conventions.md` — Developer-doc-specific patterns (line-highlighted YAML, field tables, diagrams, cross-references)
-- `references/examples/use-case-en.md` — Complete English use case sample
-- `references/examples/use-case-zh.md` — Complete Chinese use case sample
 - `references/examples/developer-architecture.md` — Architecture/concept doc sample
 - `references/examples/developer-api.md` — API reference doc sample

@@ -24,10 +24,16 @@
     },
     {
       "id": 4,
-      "name": "index-page-with-filterable-list",
-      "prompt": "Create an index page for a new 'Developer Tools' section in Olares documentation. Include a FilterableList component with items like: VS Code Server (tags: ['Development']), Jupyter Notebook (tags: ['AI', 'Development']), GitLab (tags: ['DevOps']), and n8n (tags: ['Automation']). Write it in English.",
-      "expected_output": "A markdown file with proper frontmatter, a descriptive introduction paragraph, and a FilterableList component with the specified items and tags. Should follow the Olares index page pattern.",
+      "name": "use-case-index-gallery",
+      "prompt": "The existing docs/use-cases/index.md needs to show a new app use case in the index. Check how the current index works and update the appropriate discovery files. Do not redesign the index page.",
+      "expected_output": "Route the app use case to use-case-writer. Keep the existing UseCaseGallery component and add the app to docs/.vitepress/data/useCases.ts and the applicable language sidebars. Do not insert a hard-coded FilterableList.",
       "files": []
+    },
+    {
+      "id": 5,
+      "name": "routine-limit-without-warning",
+      "prompt": "Review a Settings manual page. A draft puts a warning callout before every field and another warning about a page refresh clearing an unsaved preview. The UI validates field format. The user wants concise instructions.",
+      "expected_output": "Keep the refresh consequence in short prose before the affected action. Remove repetitive warnings and field-format reminders already handled by the UI. Reserve warning callouts for genuinely serious or irreversible consequences."
     }
   ]
 }

@@ -1,9 +1,9 @@
 ---
 name: use-case-writer
-description: Create and revise bilingual Olares use case tutorials from Chinese or English drafts, app-porting notes, test results, implementation context, or existing PRs. Use when writing or editing app walkthroughs under docs/use-cases. Organize supported facts around a useful reader task and reuse applicable documentation. Produce English deliverables first and complete Chinese deliverables after English finalization. For manuals, developer references, or troubleshooting-only pages, see olares-docs-writer. For UI copy, see olares-ux-writing.
+description: Create and revise Olares use case tutorials from drafts, app-porting notes, test results, implementation context, or existing PRs. Use for app walkthroughs under docs/use-cases. Organize supported facts around the reader task, draft English first, and keep Chinese in sync when requested or revising bilingual pages. For manuals, developer references, or troubleshooting-only pages, see olares-docs-writer. For UI copy, see olares-ux-writing.
 
 metadata:
-  version: 0.6.0
+  version: 0.6.1
 ---
 
 # Olares Use Case Writer
@@ -30,12 +30,12 @@ Keep deliverables within the requested scope. Test notes do not automatically re
 
 If you skip files 2-3, the use case will not appear in the sidebar or the gallery and will be invisible to readers.
 
-### Created after English is finalized (Chinese)
+### Chinese deliverables when in scope
 
-4. `docs/zh/use-cases/<app>.md`: a complete standalone Chinese translation with localized frontmatter, the AI-translation warning, and natural Chinese copy.
+4. `docs/zh/use-cases/<app>.md`: a complete standalone Chinese page with localized frontmatter, the AI-translation warning, and natural Chinese copy.
 5. Updated `docs/.vitepress/usecase.zh.ts`: matching entry under the `/zh/use-cases/` link prefix.
 
-Do not create the Chinese page while the English copy is still changing. Once the user confirms the English version is finalized, create the complete Chinese translation automatically. Never use a whole-page `@include` stub as the Chinese deliverable. Localized reusable fragments may still be included from `docs/zh/reusables/` when both languages have matching reusable files.
+Draft and review the English page first, then bring the Chinese page into sync after the English content pass. When the user requests both languages or revises an existing bilingual use case, update both without requiring a separate English sign-off. For an English-only request, do not expand the scope to Chinese unless the user asks. Never use a whole-page `@include` stub as the Chinese deliverable. Localized reusable fragments may still be included from `docs/zh/reusables/` when both languages have matching reusable files.
 
 ## Output Format
 
@@ -147,8 +147,10 @@ Do **not** bold hardware or spec mentions (GPU, CPU architecture, VRAM, etc.) in
 
 **Don't invent hardware constraints.** Do not add minimum GPU VRAM, CPU core count, or RAM requirements unless the source material explicitly states them as hard requirements. A demo running on specific hardware is not the same as that hardware being a requirement.
 
+Keep Prerequisites to conditions the reader must meet. Put instructions for checking hardware or changing settings in the relevant workflow, and describe benchmark hardware beside the results rather than as a requirement.
+
 **Do not use conditional prerequisites.** Never write "if you plan to use..." or "when using..." in Prerequisites. Instead:
-- Pick one primary example and declare it in the intro (e.g., "This guide uses a single-model app as an example").
+- Pick one main path and state its real requirements. A concrete setup configuration does not require an invented user-content scenario.
 - Move optional requirements into the relevant subsection.
 
 ```markdown
@@ -192,6 +194,8 @@ Use H3 (`###`) for sub-steps within each section.
 
 **Avoid orphan H3 headings**: If an H2 section would contain only a single H3, remove the H3 and place its content directly under the H2. A lone H3 adds unnecessary nesting.
 
+Keep one continuous user journey in one ordered list. If opening a page is immediately followed by an action on that page, continue the steps instead of creating a new section. Merge a short follow-up action into the surrounding section unless readers need to find it independently.
+
 ### 7. Special Elements
 
 #### Tips
@@ -227,6 +231,8 @@ Important context or note
 Critical caution about data loss or security
 :::
 ```
+
+Explain a user-facing limitation before the action it affects. Use ordinary prose for routine reminders. Reserve a warning callout for a serious consequence or an easy-to-miss irreversible choice, and state the consequence once.
 
 #### Tabs (for alternative methods)
 ```markdown
@@ -329,6 +335,8 @@ Only use placeholders for screenshots that genuinely do not yet exist.
 
 Use "Learn more" as the standard heading (not "Next steps"). Format all items as links with a brief description. Do not mix plain-text bullets with link bullets.
 
+For general upstream documentation, link to the project page or its current default-branch documentation. Pin a tag or commit only when the linked content must match a specific packaged version, and label that version in the link text.
+
 ## Style Guidelines
 
 Read [Writing style](references/writing-style.md) before drafting or reviewing. It defines punctuation, tutorial voice, terminology, bolding, and list conventions.
@@ -361,7 +369,7 @@ New use case screenshots belong in `/images/manual/use-cases/` and use `#bordere
 
 2. **Search for reuse before drafting**. Inspect `docs/reusables/`, localized fragments, canonical guides, and existing screenshots. Verify region names and applicability. Include required inline procedures, link separate prerequisites, and write app-specific differences locally.
 
-3. **Design a coherent example**. Select one useful outcome and a clear default path. Explain how readers can substitute their own data. Do not invent unsupported features, hard requirements, or successful test results.
+3. **Choose the task and the amount of example material it needs**. A setup guide for a general-purpose app may need a concrete model or configuration but no sample user prompt. A guide to a specific workflow may need one realistic scenario carried through to the result. Do not turn a test prompt into an invented user task. See `references/tutorial-from-evidence.md`.
 
 4. **Write the English tutorial**. Include Learning objectives. Explain where required values come from and where commands run. Place optional configuration after the main workflow. Use headings, tables, lists, and tabs only where they clarify the task.
 
@@ -391,10 +399,10 @@ New use case screenshots belong in `/images/manual/use-cases/` and use `#bordere
    - `descriptionZh` (recommended): the Chinese gallery blurb, no trailing period. If omitted, the gallery falls back to the English `description` on the Chinese site, so add it whenever you have the Chinese copy.
    - When **deleting** a use case, remove its entry from this array too, or it will leave a dead card.
 
-7. **Create complete Chinese deliverables after English finalization** - If it is unclear whether the English version is final, ask the user once. Do not ask whether they want an `@include` stub or a full translation; whole-page stubs are obsolete.
+7. **Create or update complete Chinese deliverables when in scope** - Finish the English content pass first. If the user requested both languages or the existing use case is bilingual, update the Chinese page and sidebar in the same task. Ask about language scope only when the request genuinely leaves it unclear. Do not ask whether to use an `@include` stub; whole-page stubs are obsolete.
 
-   - **If the English version is not finalized or the user does not confirm**, skip the Chinese page and ZH sidebar entry. Tell the user they will be added after English finalization.
-   - **If the user confirms the English version is finalized**, automatically create both Chinese deliverables:
+   - For a new English-only request, leave the Chinese page and sidebar out of scope and say so in the review summary.
+   - When Chinese is in scope:
      - Translate the full page into natural Chinese. Do not translate sentence by sentence mechanically.
      - Localize the frontmatter `description` and keywords. Keep `app_version`, `doc_version`, and `doc_updated` aligned with the English page.
      - Add this warning after the frontmatter:
@@ -414,12 +422,12 @@ New use case screenshots belong in `/images/manual/use-cases/` and use `#bordere
    - [ ] `docs/use-cases/<app>.md` exists and includes Learning objectives
    - [ ] `docs/.vitepress/usecase.en.ts` contains the new entry
    - [ ] `docs/.vitepress/data/useCases.ts` contains the new gallery entry
-   - [ ] (If English finalized) `docs/zh/use-cases/<app>.md` contains a complete Chinese translation with 学习目标, not a whole-page `@include`
-   - [ ] (If English finalized) `docs/.vitepress/usecase.zh.ts` contains the new entry
+   - [ ] (If Chinese is in scope) `docs/zh/use-cases/<app>.md` contains a complete Chinese page with 学习目标, not a whole-page `@include`
+   - [ ] (If Chinese is in scope) `docs/.vitepress/usecase.zh.ts` contains the new entry
 
    If any required file is missing, the task is incomplete. Do not tell the user the use case is ready until all required items are in place.
 
-9. **Output** - Provide a short summary listing the files you created or modified. If English is not finalized, state that the Chinese page and navigation are pending finalization.
+9. **Output** - Provide a short summary listing the files you created or modified. If Chinese was out of scope, state that it was not updated.
 
 ## Example Transformation
 

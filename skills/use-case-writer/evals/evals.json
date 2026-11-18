@@ -150,6 +150,28 @@
         "Provide usable transfer steps or a precise existing guide, including destination and result.",
         "Do not apply HTTP URL conversion to SSH/SFTP, repeat all connection details unnecessarily, or invent missing IDs."
       ]
+    },
+    {
+      "id": 16,
+      "name": "general-chat-no-forced-scenario",
+      "prompt": "Write an Olares use case for a general-purpose local chat app. First install requires a GGUF file and RAM/GPU settings. After a model is ready, Open chat works immediately. Engineering notes include a long synthetic meeting transcript and a Python sorting prompt used during testing. The page should teach installation, first chat, and later resource changes.",
+      "expected_output": "Use a concrete model and starting resource values for setup, with a method to adapt them to another device. Continue from Open chat to the message box without inventing a meeting-summary or code-review use case. Omit connection probes, language changes, and API-key explanations unless required by the actual UI. Keep the synthetic test prompts out of the reader workflow.",
+      "assertions": [
+        "Treat the model and resource values as setup examples, without forcing an unrelated content scenario.",
+        "Continue directly from model readiness to ordinary chat.",
+        "Give a way to choose and later change resource values, rather than only reproducing tested values."
+      ]
+    },
+    {
+      "id": 17,
+      "name": "purpose-built-summary-realistic-example",
+      "prompt": "Write a guide for an app whose main purpose is summarizing meeting notes. The source material contains a very long synthetic prompt pasted into a chat box for testing. The reader wants to summarize their own meeting notes and export the result.",
+      "expected_output": "Use one plausible meeting-summary workflow because that is the actual reader task. Show how readers provide their own notes and get a usable summary, without treating the synthetic test prompt as realistic meeting input. Explain any export limitation before the export action, using a warning only if the consequence warrants it.",
+      "assertions": [
+        "Use a realistic end-to-end example for the app-specific summarization task.",
+        "Do not reuse an implausible test prompt as the user scenario.",
+        "Place the reason for export before the export instructions."
+      ]
     }
   ],
   "evaluation_notes": "These are regression scenarios, not recorded passing runs. Evaluate task usefulness, supported facts, required Learning objectives, scope, reuse, and final-state consistency. Do not use merged PR text as the sole gold answer."

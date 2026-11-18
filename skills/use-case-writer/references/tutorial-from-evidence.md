@@ -19,18 +19,18 @@ Do not organize the tutorial around porting chronology, debugging sessions, pass
 
 Keep a limitation when it changes what the reader can do. Explain its symptom, scope, and supported next action. Removing test narration must not imply that an untested path is verified or that an unresolved issue is fixed. Do not delete evidence records just because they do not belong in the tutorial.
 
-## Choose a useful example
+## Choose the reader task before an example
 
-Use a small, realistic task with value beyond testing a feature. Keep the same scenario across related steps and explain how to substitute the reader's own material.
+First decide what the guide is teaching. A general-purpose app setup can use a concrete model, file, or configuration without inventing a separate task for its first chat or launch. If the guide teaches a specific workflow, use a small, realistic task with value beyond testing a feature. Keep that scenario across related steps and explain how to substitute the reader's own material.
 
 - A scheduled world save teaches routine server administration better than a temporary player-count test.
 - Related project documents can show why knowledge-graph relationships are useful.
 - A saved preference recalled in a later conversation explains persistent memory.
 - A research question followed by source review and export provides a complete result.
 
-These are editorial examples. Confirm product support before using them. Label fictional data and do not claim generated examples were executed.
+These are editorial examples for task-specific guides, not required scenarios for every app. Confirm product support before using them. Label fictional data and do not claim generated examples were executed. A test prompt or pasted sample is not automatically a plausible user task.
 
-Pick an explicit example configuration for the first run. Distinguish it from defaults, hard requirements, and all supported options. Put the full option list where readers need it rather than listing every combination before starting.
+When setup requires values, pick an explicit starting configuration for the first run. Distinguish it from defaults and hard requirements. Explain how readers choose values for another device or input and where they can change them later. Put the full option list where readers need it rather than listing every combination before starting.
 
 ## Keep Learning objectives
 
@@ -42,6 +42,8 @@ Explain where required values come from, which app or instance they belong to, a
 
 Lead with working defaults when supported. Put alternate models, agents, distributions, and file-editing fallbacks after the main path. Explain unfamiliar components when needed to make a choice. Prefer UI instructions for UI tasks while keeping CLI actions where required.
 
+Start from the app's actual default state. Do not add connection probes, language changes, credentials, or settings as setup steps when the reader can use the feature immediately. Place diagnostic actions where they help recover from a failure. Skip input-format reminders already enforced clearly by the UI unless the reader needs them to decide a value.
+
 Retain consequences that affect decisions or data: a clone might create a fresh installation, a disk might support expansion but not shrinking, and deleting app data might delete the system disk. Verify these per app and explain them beside the action.
 
 ## Keep checks that help the reader proceed
@@ -52,7 +54,7 @@ Keep service readiness, a relevant startup marker, checking the intended memory 
 
 Avoid separate acceptance lists that repeat login, restart, export, or permission checks solely to reproduce test coverage. Include commands for the reader's current question, not because they appeared together in a diagnostic script.
 
-For AI outputs, describe where to inspect the result and how to compare it with source material. Do not require fixed wording or promise identical generated entities. Preserve exact expected values when they are deterministic configuration or status values rather than variable AI output.
+When source review or answer accuracy is part of the reader task, describe where to inspect the AI result and how to compare it with the source material. Do not add an output-inspection step to ordinary chat just to mimic a test. Do not require fixed wording or promise identical generated entities. Preserve exact expected values when they are deterministic configuration or status values rather than variable AI output.
 
 ## Search for reuse before drafting
 
@@ -81,7 +83,7 @@ Do not modify shared behavior merely to fit one app. Extract a new fragment only
 
 Review the affected English and Chinese pages, metadata, gallery copy, and included content after all edits. Repeat after technical follow-ups or FAQ additions.
 
-- Is the task coherent, with required Learning objectives and an example worth using?
+- Is the reader task clear, with required Learning objectives? If there is an example, does it serve that task rather than introduce an unrelated scenario?
 - Are required inputs traceable and steps complete in the actual UI order?
 - Are example values distinguished from defaults and requirements?
 - Do checks help the reader continue or recover, without repeating acceptance tests?

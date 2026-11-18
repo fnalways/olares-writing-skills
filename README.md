@@ -9,7 +9,7 @@ Built for Claude Code, OpenAI Codex, Cursor, Windsurf, and any agent that suppor
 | Skill | What it does |
 | --- | --- |
 | `olares-docs-writer` | Write Olares manuals, developer docs, and troubleshooting in VitePress format. Route app use cases to use-case-writer. Bilingual EN/ZH. |
-| `use-case-writer` | Create task-oriented bilingual use case tutorials from drafts, porting notes, test records, or PRs for `docs.olares.com`, with English-first review and complete Chinese delivery after finalization. |
+| `use-case-writer` | Create task-oriented use case tutorials from drafts, porting notes, test records, or PRs for `docs.olares.com`. Draft English first and update Chinese when it is in scope. |
 | `olares-ux-writing` | Review and write bilingual UI copy (labels, errors, dialogs, onboarding) following Olares-specific style and terminology. |
 | `olares-customer-service` | Research, triage, draft, and review Olares support replies using current official evidence and risk-aware escalation rules. |
 

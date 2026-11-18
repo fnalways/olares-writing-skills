@@ -2,6 +2,12 @@
 
 Plugin-level changelog. Per-skill changes show up in the SKILL.md `metadata.version` field.
 
+## Skill update: 2026-11-18
+
+- `use-case-writer` v0.6.1: Distinguish general app setup from task-specific tutorials so examples serve the reader's actual task. Keep the first-use flow continuous, explain configurable values, place limitations beside relevant actions, use stable upstream links, and update Chinese pages when in scope without an extra sign-off.
+- `olares-docs-writer` v0.3.1: Make warnings proportional to consequences, remove rigid section and check requirements, point use case indexes to the current gallery, and favor stable upstream links.
+- `olares-writing-skills` v0.4.1: Align the root description with the use-case writer's current language workflow.
+
 ## v0.6.0 — 2026-10-16
 
 - `use-case-writer` v0.6.0:
