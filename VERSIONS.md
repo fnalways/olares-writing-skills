@@ -2,6 +2,12 @@
 
 Plugin-level changelog. Per-skill changes show up in the SKILL.md `metadata.version` field.
 
+## v0.7.0 — 2026-11-20
+
+- Add `olares-market-weekly` v0.1.0 for English weekly Market roundups, poster copy, Discord/X/Facebook drafts, Feishu updates, and editable SVG or Figma posters.
+- Include source verification, scoped draft approval, actionable update notices, channel-specific guidance, and reusable vector header artwork.
+- Add the skill to the marketplace and root skill routing. Update `olares-writing-skills` to v0.5.0.
+
 ## Skill update: 2026-11-18
 
 - `use-case-writer` v0.6.1: Distinguish general app setup from task-specific tutorials so examples serve the reader's actual task. Keep the first-use flow continuous, explain configurable values, place limitations beside relevant actions, use stable upstream links, and update Chinese pages when in scope without an extra sign-off.

@@ -1,14 +1,14 @@
 ---
 name: olares-writing-skills
 description: |
-  Writing and customer-support skills for Olares contributors. Use when the user wants to create or edit documentation, use case tutorials, troubleshooting guides, UX copy, or evidence-backed customer-service replies for Olares. Triggers on phrases like "write documentation", "create a use case", "turn porting notes into a tutorial", "translate docs", "review UI strings", "write troubleshooting guide", "review this ticket reply", "Olares support", "Olares docs", and "docs.olares.com". Includes skills for: olares-docs-writer, use-case-writer, olares-ux-writing, olares-i18n-audit, and olares-customer-service.
+  Writing and customer-support skills for Olares contributors. Use when the user wants to create or edit documentation, use case tutorials, troubleshooting guides, UX copy, weekly Market roundups, or evidence-backed customer-service replies for Olares. Triggers on phrases like "write documentation", "weekly Market roundup", "create a use case", "turn porting notes into a tutorial", "translate docs", "review UI strings", "write troubleshooting guide", "review this ticket reply", "Olares support", "Olares docs", and "docs.olares.com". Includes skills for: olares-docs-writer, use-case-writer, olares-ux-writing, olares-i18n-audit, olares-customer-service, and olares-market-weekly.
 metadata:
-  version: 0.4.1
+  version: 0.5.0
 ---
 
 # Olares Writing Skills
 
-Collection of writing skills for Olares documentation and UI copy.
+Collection of writing skills for Olares documentation, UI copy, customer support, and weekly Market announcements.
 
 ## Included Skills
 
@@ -17,6 +17,7 @@ Collection of writing skills for Olares documentation and UI copy.
 - **olares-ux-writing**: Review and write bilingual UI copy (labels, errors, dialogs, onboarding) following Olares-specific style and terminology.
 - **olares-i18n-audit**: Check i18n consistency across Olares documentation.
 - **olares-customer-service**: Research, triage, draft, and review Olares customer-support replies using current official evidence and risk-aware escalation.
+- **olares-market-weekly**: Prepare evidence-based weekly app roundups, English social copy, and editable posters using the established Olares style.
 
 ## Usage
 
@@ -28,6 +29,7 @@ Ask your agent to help with Olares writing tasks:
 - "Write a troubleshooting guide for VPN connection issues"
 - "Check this doc for i18n consistency"
 - "Research this Olares ticket and draft a safe customer reply"
+- "Prepare this week’s Olares Market roundup and poster copy"
 
 ## File Structure
 
@@ -37,7 +39,8 @@ skills/
 ├── use-case-writer/      # Bilingual use case transformation
 ├── olares-ux-writing/    # UI copy review
 ├── olares-i18n-audit/    # i18n audit
-└── olares-customer-service/ # Support reply research and review
+├── olares-customer-service/ # Support reply research and review
+└── olares-market-weekly/ # Weekly Market copy and editable posters
 ```
 
 For detailed skill documentation, see individual skill directories under `skills/`.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Olares Market Weekly"
+  short_description: "Prepare weekly Olares Market copy and editable posters"
+  default_prompt: "Use $olares-market-weekly to prepare this week’s Olares Market roundup from the supplied release source, starting with English copy for review."

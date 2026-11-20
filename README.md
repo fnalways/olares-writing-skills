@@ -1,6 +1,6 @@
 # Olares Writing Skills
 
-Writing and customer-support skills for [Olares](https://olares.com) contributors. Drop these into your AI coding agent so it can help draft Olares documentation, use case tutorials, UX copy, and evidence-backed customer replies in the established Olares style.
+Writing and customer-support skills for [Olares](https://olares.com) contributors. Drop these into your AI coding agent so it can help draft Olares documentation, use case tutorials, UX copy, weekly Market roundups, and evidence-backed customer replies in the established Olares style.
 
 Built for Claude Code, OpenAI Codex, Cursor, Windsurf, and any agent that supports the [Agent Skills spec](https://agentskills.io).
 
@@ -12,6 +12,7 @@ Built for Claude Code, OpenAI Codex, Cursor, Windsurf, and any agent that suppor
 | `use-case-writer` | Create task-oriented use case tutorials from drafts, porting notes, test records, or PRs for `docs.olares.com`. Draft English first and update Chinese when it is in scope. |
 | `olares-ux-writing` | Review and write bilingual UI copy (labels, errors, dialogs, onboarding) following Olares-specific style and terminology. |
 | `olares-customer-service` | Research, triage, draft, and review Olares support replies using current official evidence and risk-aware escalation rules. |
+| `olares-market-weekly` | Prepare English weekly app roundups, Discord/X/Facebook copy, Feishu drafts, and editable SVG or Figma posters. |
 
 ## Installation
 
@@ -77,6 +78,7 @@ Once installed, just ask your agent to help with Olares writing tasks:
 - "Review these UI strings against Olares UX writing guidelines"
 - "Write a troubleshooting guide for VPN connection issues"
 - "Research this Olares ticket and draft a safe customer reply"
+- "Prepare this week’s Olares Market roundup and poster copy"
 
 The agent picks the right skill based on the trigger phrases in your request.
 
